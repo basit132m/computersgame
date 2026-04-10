@@ -10,12 +10,12 @@ class AdSlotSeeder extends Seeder
     public function run(): void
     {
         $slots = [
-            ['key' => 'header_ad',      'name' => 'إعلان الرأس (Header)',         'code' => '', 'is_active' => false],
-            ['key' => 'sidebar_ad',     'name' => 'إعلان الشريط الجانبي',         'code' => '', 'is_active' => false],
-            ['key' => 'in_content_ad',  'name' => 'إعلان داخل المحتوى',           'code' => '', 'is_active' => false],
-            ['key' => 'after_post_ad',  'name' => 'إعلان بعد المقال',             'code' => '', 'is_active' => false],
-            ['key' => 'footer_ad',      'name' => 'إعلان التذييل (Footer)',        'code' => '', 'is_active' => false],
-            ['key' => 'download_ad',    'name' => 'إعلان صفحة التحميل',           'code' => '', 'is_active' => false],
+            ['slot_key' => 'header_ad',      'label' => 'إعلان الرأس (Header)',         'code' => '', 'active' => false],
+            ['slot_key' => 'sidebar_ad',     'label' => 'إعلان الشريط الجانبي',         'code' => '', 'active' => false],
+            ['slot_key' => 'in_content_ad',  'label' => 'إعلان داخل المحتوى',           'code' => '', 'active' => false],
+            ['slot_key' => 'after_post_ad',  'label' => 'إعلان بعد المقال',             'code' => '', 'active' => false],
+            ['slot_key' => 'footer_ad',      'label' => 'إعلان التذييل (Footer)',        'code' => '', 'active' => false],
+            ['slot_key' => 'download_ad',    'label' => 'إعلان صفحة التحميل',           'code' => '', 'active' => false],
         ];
 
         foreach ($slots as $slot) {
