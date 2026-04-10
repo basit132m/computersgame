@@ -1,0 +1,74 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+@source '../../app/Livewire/**/*.php';
+
+@theme {
+    --font-sans: 'Tajawal', 'Cairo', ui-sans-serif, system-ui, sans-serif;
+    --color-primary: #1d4ed8;
+    --color-primary-dark: #1e40af;
+    --color-primary-light: #3b82f6;
+}
+
+/* Arabic RTL base styles */
+body {
+    font-family: 'Tajawal', 'Cairo', sans-serif;
+    direction: rtl;
+    text-align: right;
+}
+
+/* Line clamp utilities */
+.line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+.line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+/* Prose RTL overrides */
+.prose { direction: rtl; text-align: right; }
+.prose ul { padding-right: 1.25rem; padding-left: 0; }
+.prose ol { padding-right: 1.25rem; padding-left: 0; }
+
+/* Admin sidebar active link */
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.15s ease;
+    color: #374151;
+}
+.sidebar-link:hover { background-color: #eff6ff; color: #1d4ed8; }
+.sidebar-link.active { background-color: #1d4ed8; color: #ffffff; }
+
+/* TinyMCE RTL fix */
+.tox-tinymce { direction: ltr !important; }
+
+/* Livewire loading indicators */
+[wire\:loading] { opacity: 0.6; }
+
+/* Download timer countdown */
+.countdown-ring {
+    transform: rotate(-90deg);
+    transform-origin: center;
+}
+
+/* Star rating */
+.star-btn { cursor: pointer; transition: color 0.1s; }
+
+/* Drag-and-drop sortable */
+.sortable-ghost { opacity: 0.4; background: #e0f2fe; }
+.sortable-chosen { box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
