@@ -57,9 +57,14 @@ class HomeController extends Controller
             return \App\Models\Tag::withCount('posts')->orderByDesc('posts_count')->limit(20)->get();
         });
 
+        $latestPosts = Cache::remember('home_latest_all', 1800, function () {
+            return Post::published()->latest('published_at')->limit(15)->get();
+        });
+
         return view('front.home', compact(
             'trending', 'mostDownloaded', 'latestGames', 'latestSoftware',
-            'latestApks', 'latestArticles', 'categories', 'sidebarTrending', 'sidebarTags'
+            'latestApks', 'latestArticles', 'categories', 'sidebarTrending', 'sidebarTags',
+            'latestPosts'
         ));
     }
 }
