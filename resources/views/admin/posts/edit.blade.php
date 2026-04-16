@@ -2,13 +2,11 @@
 @section('title', 'تعديل: ' . $post->title)
 
 @push('head')
-{{-- TinyMCE 6 with Arabic RTL --}}
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.tiny.cloud/1/nf5vqpeni2pg38rvx6wdx4s7fc2t92tkm9lclf528l48j1dp/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
 tinymce.init({
     selector: '#content',
     directionality: 'rtl',
-    language: 'ar',
     height: 500,
     menubar: 'file edit view insert format tools table help',
     plugins: [

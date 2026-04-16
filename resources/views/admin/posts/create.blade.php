@@ -2,18 +2,44 @@
 @section('title', 'إضافة مقال جديد')
 
 @section('head')
-{{-- TinyMCE RTL Arabic --}}
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.tiny.cloud/1/nf5vqpeni2pg38rvx6wdx4s7fc2t92tkm9lclf528l48j1dp/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
 tinymce.init({
     selector: '#content',
     directionality: 'rtl',
-    language: 'ar',
     height: 500,
-    plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
-    toolbar: 'undo redo | blocks | bold italic forecolor | alignright aligncenter alignleft | bullist numlist outdent indent | link image media | code | help',
-    content_style: 'body { font-family: Tajawal, Arial, sans-serif; font-size: 16px; direction: rtl; text-align: right; }',
-    language_url: '/vendor/tinymce/langs/ar.js',
+    menubar: 'file edit view insert format tools table help',
+    plugins: [
+        'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+        'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+        'insertdatetime', 'media', 'table', 'help', 'wordcount', 'directionality'
+    ],
+    toolbar: [
+        'undo redo | blocks | bold italic forecolor backcolor |',
+        'alignright aligncenter alignleft alignjustify | ltr rtl |',
+        'bullist numlist | outdent indent | link image media |',
+        'table | code fullscreen | help'
+    ].join(' '),
+    content_style: 'body { font-family: Tajawal, Arial, sans-serif; font-size: 16px; direction: rtl; text-align: right; padding: 12px; }',
+    images_upload_url: '{{ route("admin.media.upload") }}',
+    images_upload_handler: (blobInfo, progress) => new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '{{ route("admin.media.upload") }}');
+        xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name=csrf-token]').content);
+        xhr.upload.onprogress = e => { if (e.lengthComputable) progress(e.loaded / e.total * 100); };
+        xhr.onload = () => {
+            const json = JSON.parse(xhr.responseText);
+            if (xhr.status !== 200 || !json.url) { reject('فشل الرفع'); return; }
+            resolve(json.url);
+        };
+        xhr.onerror = () => reject('خطأ في الشبكة');
+        const data = new FormData();
+        data.append('file', blobInfo.blob(), blobInfo.filename());
+        xhr.send(data);
+    }),
+    setup: editor => {
+        editor.on('change', () => editor.save());
+    }
 });
 </script>
 @endsection
