@@ -11,10 +11,12 @@ class Post extends Model
 {
     protected $fillable = [
         'title', 'slug', 'excerpt', 'content', 'type', 'status',
-        'featured_image', 'version', 'developer', 'file_size', 'platform',
+        'featured_image', 'banner_image', 'gallery_images',
+        'version', 'developer', 'file_size', 'game_language', 'platform',
         'release_date', 'updated_date', 'system_requirements', 'features',
+        'sys_req_os', 'sys_req_cpu', 'sys_req_gpu', 'sys_req_ram', 'sys_req_storage', 'sys_req_software',
         'whats_new', 'pros', 'cons', 'youtube_url', 'meta_title',
-        'meta_description', 'meta_keywords', 'canonical_url', 'robots',
+        'meta_description', 'meta_keywords', 'focus_keyword', 'canonical_url', 'robots',
         'schema_type', 'og_title', 'og_description', 'og_image',
         'views', 'downloads', 'published_at', 'created_by', 'category_id',
     ];
@@ -22,9 +24,10 @@ class Post extends Model
     protected function casts(): array
     {
         return [
-            'release_date' => 'date',
-            'updated_date' => 'date',
-            'published_at' => 'datetime',
+            'release_date'   => 'date',
+            'updated_date'   => 'date',
+            'published_at'   => 'datetime',
+            'gallery_images' => 'array',
         ];
     }
 

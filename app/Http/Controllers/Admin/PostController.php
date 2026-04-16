@@ -54,6 +54,21 @@ class PostController extends Controller
             );
         }
 
+        if ($request->hasFile('banner_image')) {
+            $validated['banner_image'] = ImageService::uploadWebP(
+                $request->file('banner_image'),
+                'posts'
+            );
+        }
+
+        if ($request->hasFile('gallery_images')) {
+            $gallery = [];
+            foreach ($request->file('gallery_images') as $img) {
+                $gallery[] = ImageService::uploadWebP($img, 'gallery');
+            }
+            $validated['gallery_images'] = $gallery;
+        }
+
         if ($request->status === 'published' && empty($request->published_at)) {
             $validated['published_at'] = now();
         }
@@ -63,6 +78,21 @@ class PostController extends Controller
         if ($request->filled('tags')) {
             $tagIds = $this->syncTags($request->tags);
             $post->tags()->sync($tagIds);
+        }
+
+        if ($request->has('download_links')) {
+            foreach ($request->download_links as $i => $linkData) {
+                if (!empty($linkData['url'])) {
+                    $post->downloadLinks()->create([
+                        'label'      => $linkData['label'] ?? 'تحميل مباشر',
+                        'url'        => $linkData['url'],
+                        'platform'   => $linkData['platform'] ?? 'pc',
+                        'file_size'  => $linkData['file_size'] ?? null,
+                        'version'    => $linkData['version'] ?? null,
+                        'sort_order' => $i,
+                    ]);
+                }
+            }
         }
 
         Cache::flush();
@@ -95,6 +125,36 @@ class PostController extends Controller
                 $request->file('featured_image'),
                 'posts'
             );
+        }
+
+        if ($request->hasFile('banner_image')) {
+            if ($post->banner_image) {
+                ImageService::delete($post->banner_image);
+            }
+            $validated['banner_image'] = ImageService::uploadWebP(
+                $request->file('banner_image'),
+                'posts'
+            );
+        }
+
+        if ($request->hasFile('gallery_images')) {
+            if ($post->gallery_images) {
+                foreach ($post->gallery_images as $img) {
+                    ImageService::delete($img);
+                }
+            }
+            $gallery = [];
+            foreach ($request->file('gallery_images') as $img) {
+                $gallery[] = ImageService::uploadWebP($img, 'gallery');
+            }
+            $validated['gallery_images'] = $gallery;
+        } elseif ($request->boolean('clear_gallery')) {
+            if ($post->gallery_images) {
+                foreach ($post->gallery_images as $img) {
+                    ImageService::delete($img);
+                }
+            }
+            $validated['gallery_images'] = null;
         }
 
         if ($request->status === 'published' && empty($post->published_at)) {
@@ -145,13 +205,23 @@ class PostController extends Controller
             'type'                => 'required|in:game,software,apk,blog,tutorial,listicle,review',
             'status'              => 'required|in:draft,pending,published,scheduled',
             'featured_image'      => 'nullable|image|max:5120',
+            'banner_image'        => 'nullable|image|max:5120',
+            'gallery_images'      => 'nullable|array',
+            'gallery_images.*'    => 'image|max:5120',
             'version'             => 'nullable|string|max:50',
             'developer'           => 'nullable|string|max:255',
             'file_size'           => 'nullable|string|max:50',
+            'game_language'       => 'nullable|string|max:100',
             'platform'            => 'required|in:pc,android,ios,mac,all',
             'release_date'        => 'nullable|date',
             'updated_date'        => 'nullable|date',
             'system_requirements' => 'nullable|string',
+            'sys_req_os'          => 'nullable|string|max:255',
+            'sys_req_cpu'         => 'nullable|string|max:255',
+            'sys_req_gpu'         => 'nullable|string|max:255',
+            'sys_req_ram'         => 'nullable|string|max:255',
+            'sys_req_storage'     => 'nullable|string|max:255',
+            'sys_req_software'    => 'nullable|string|max:255',
             'features'            => 'nullable|string',
             'whats_new'           => 'nullable|string',
             'pros'                => 'nullable|string',
@@ -160,6 +230,7 @@ class PostController extends Controller
             'meta_title'          => 'nullable|string|max:255',
             'meta_description'    => 'nullable|string|max:500',
             'meta_keywords'       => 'nullable|string|max:500',
+            'focus_keyword'       => 'nullable|string|max:255',
             'canonical_url'       => 'nullable|url',
             'robots'              => 'nullable|string|max:100',
             'schema_type'         => 'required|in:SoftwareApplication,Article,Review,HowTo,ItemList',

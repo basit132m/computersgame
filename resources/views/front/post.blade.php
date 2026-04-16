@@ -31,12 +31,14 @@
 </script>
 @endsection
 
+@php $kw = $post->focus_keyword ?: $post->title; @endphp
+
 @section('content')
 <div class="flex gap-5">
 
-    {{-- ═══════════════════════
-         Main Content (RIGHT in RTL)
-    ═══════════════════════ --}}
+    {{-- ═══════════════════════════════
+         Main Content
+    ═══════════════════════════════ --}}
     <article class="flex-1 min-w-0">
 
         {{-- Breadcrumb --}}
@@ -54,7 +56,7 @@
             <span class="text-gray-700 truncate max-w-xs">{{ $post->title }}</span>
         </nav>
 
-        {{-- Title + Date --}}
+        {{-- Title + Download Button --}}
         <div class="bg-white border border-gray-200 rounded overflow-hidden mb-4">
             <div class="p-4 pb-3">
                 <h1 class="text-xl md:text-2xl font-bold text-gray-900 leading-snug mb-2">
@@ -95,8 +97,16 @@
             @endif
         </div>
 
-        {{-- Featured Image --}}
-        @if($post->featured_image)
+        {{-- Banner Image --}}
+        @if($post->banner_image)
+        <div class="bg-white border border-gray-200 rounded overflow-hidden mb-4">
+            <img src="{{ asset('storage/'.$post->banner_image) }}"
+                 alt="{{ $post->title }}"
+                 class="w-full object-cover"
+                 loading="eager">
+        </div>
+        @elseif($post->featured_image)
+        {{-- Show featured image only if no banner --}}
         <div class="bg-white border border-gray-200 rounded overflow-hidden mb-4">
             <img src="{{ asset('storage/'.$post->featured_image) }}"
                  alt="{{ $post->title }}"
@@ -117,7 +127,7 @@
                 <p class="text-gray-700 leading-loose mb-4 text-sm">{{ strip_tags($post->excerpt) }}</p>
                 @endif
                 @if($post->content)
-                <div class="prose prose-sm max-w-none prose-headings:text-gray-900 prose-headings:font-bold prose-p:text-gray-700 prose-p:leading-loose prose-a:text-[#30A38A] prose-img:rounded prose-img:mx-auto">
+                <div class="prose prose-sm max-w-none">
                     {!! $post->content !!}
                 </div>
                 @endif
@@ -128,52 +138,113 @@
         {{-- In-Content Ad --}}
         @adslot('in_content_ad')
 
-        {{-- Specs / معلومات التحميل --}}
+        {{-- ════════════════════════════════════
+             Info Grid (4×2 cards)
+        ════════════════════════════════════ --}}
         @php
-            $hasSpecs = $post->version || $post->developer || $post->file_size || $post->release_date || $post->updated_date;
+            $hasSpecs = $post->version || $post->developer || $post->file_size
+                     || $post->release_date || $post->updated_date || $post->game_language;
         @endphp
         @if($hasSpecs)
         <div class="bg-white border border-gray-200 rounded overflow-hidden mb-4">
             <div class="flex items-center gap-2 px-4 py-3 bg-gray-50 border-b border-gray-200">
                 <i class="fas fa-info-circle text-[#30A38A]"></i>
-                <h2 class="font-bold text-gray-900 text-sm">معلومات حول تحميل {{ $post->title }}</h2>
+                <h2 class="font-bold text-gray-900 text-sm">معلومات حول تحميل {{ $kw }}</h2>
             </div>
-            <ul class="p-4 space-y-2">
-                @if($post->version)
-                <li class="flex items-center gap-2 text-sm text-gray-700">
-                    <i class="fas fa-check-circle text-[#30A38A] text-xs flex-shrink-0"></i>
-                    <span>الإصدار: <strong>{{ $post->version }}</strong></span>
-                </li>
-                @endif
+            <div class="grid grid-cols-2 gap-3 p-4">
+                {{-- Game Name --}}
+                <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
+                    <div class="w-9 h-9 bg-[#30A38A] rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-gamepad text-white text-sm"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-xs text-gray-500">اسم اللعبة</p>
+                        <p class="text-sm font-bold text-gray-800 truncate">{{ $post->title }}</p>
+                    </div>
+                </div>
+                {{-- Developer --}}
                 @if($post->developer)
-                <li class="flex items-center gap-2 text-sm text-gray-700">
-                    <i class="fas fa-check-circle text-[#30A38A] text-xs flex-shrink-0"></i>
-                    <span>المطور: <strong>{{ $post->developer }}</strong></span>
-                </li>
+                <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
+                    <div class="w-9 h-9 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-user text-white text-sm"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-xs text-gray-500">المطور</p>
+                        <p class="text-sm font-bold text-gray-800 truncate">{{ $post->developer }}</p>
+                    </div>
+                </div>
                 @endif
+                {{-- Platform --}}
+                <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
+                    <div class="w-9 h-9 bg-purple-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-desktop text-white text-sm"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-xs text-gray-500">متوافق مع</p>
+                        <p class="text-sm font-bold text-gray-800">{{ $post->platform_ar }}</p>
+                    </div>
+                </div>
+                {{-- File Size --}}
                 @if($post->file_size)
-                <li class="flex items-center gap-2 text-sm text-gray-700">
-                    <i class="fas fa-check-circle text-[#30A38A] text-xs flex-shrink-0"></i>
-                    <span>حجم الملف: <strong>{{ $post->file_size }}</strong></span>
-                </li>
+                <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
+                    <div class="w-9 h-9 bg-orange-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-hdd text-white text-sm"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-xs text-gray-500">حجم الملف</p>
+                        <p class="text-sm font-bold text-gray-800">{{ $post->file_size }}</p>
+                    </div>
+                </div>
                 @endif
-                <li class="flex items-center gap-2 text-sm text-gray-700">
-                    <i class="fas fa-check-circle text-[#30A38A] text-xs flex-shrink-0"></i>
-                    <span>المنصة: <strong>{{ $post->platform_ar }}</strong></span>
-                </li>
-                @if($post->release_date)
-                <li class="flex items-center gap-2 text-sm text-gray-700">
-                    <i class="fas fa-check-circle text-[#30A38A] text-xs flex-shrink-0"></i>
-                    <span>تاريخ الإصدار: <strong>{{ $post->release_date->format('Y/m/d') }}</strong></span>
-                </li>
+                {{-- Category --}}
+                @if($post->category)
+                <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
+                    <div class="w-9 h-9 bg-indigo-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-folder text-white text-sm"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-xs text-gray-500">التصنيف</p>
+                        <p class="text-sm font-bold text-gray-800 truncate">{{ $post->category->name }}</p>
+                    </div>
+                </div>
                 @endif
+                {{-- Language --}}
+                @if($post->game_language)
+                <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
+                    <div class="w-9 h-9 bg-teal-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-globe text-white text-sm"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-xs text-gray-500">اللغة</p>
+                        <p class="text-sm font-bold text-gray-800">{{ $post->game_language }}</p>
+                    </div>
+                </div>
+                @endif
+                {{-- Last Updated --}}
                 @if($post->updated_date)
-                <li class="flex items-center gap-2 text-sm text-gray-700">
-                    <i class="fas fa-check-circle text-[#30A38A] text-xs flex-shrink-0"></i>
-                    <span>آخر تحديث: <strong>{{ $post->updated_date->format('Y/m/d') }}</strong></span>
-                </li>
+                <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
+                    <div class="w-9 h-9 bg-green-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-calendar-check text-white text-sm"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-xs text-gray-500">آخر تحديث</p>
+                        <p class="text-sm font-bold text-gray-800">{{ $post->updated_date->format('Y/m/d') }}</p>
+                    </div>
+                </div>
                 @endif
-            </ul>
+                {{-- Version --}}
+                @if($post->version)
+                <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
+                    <div class="w-9 h-9 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-tag text-white text-sm"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-xs text-gray-500">الإصدار</p>
+                        <p class="text-sm font-bold text-gray-800">{{ $post->version }}</p>
+                    </div>
+                </div>
+                @endif
+            </div>
         </div>
         @endif
 
@@ -182,7 +253,7 @@
         <div class="bg-white border border-gray-200 rounded overflow-hidden mb-4">
             <div class="flex items-center gap-2 px-4 py-3 bg-gray-50 border-b border-gray-200">
                 <i class="fas fa-star text-[#30A38A]"></i>
-                <h2 class="font-bold text-gray-900 text-sm">مميزات {{ $post->title }}</h2>
+                <h2 class="font-bold text-gray-900 text-sm">مميزات {{ $kw }}</h2>
             </div>
             <div class="p-4">
                 @foreach(array_filter(explode("\n", $post->features)) as $line)
@@ -195,13 +266,43 @@
         </div>
         @endif
 
-        {{-- System Requirements --}}
-        @if($post->system_requirements)
+        {{-- ════════════════════════════════════
+             System Requirements — 2-column table
+        ════════════════════════════════════ --}}
+        @php
+            $hasSysReq = $post->sys_req_os || $post->sys_req_cpu || $post->sys_req_gpu
+                      || $post->sys_req_ram || $post->sys_req_storage || $post->sys_req_software
+                      || $post->system_requirements;
+        @endphp
+        @if($hasSysReq)
         <div class="bg-white border border-gray-200 rounded overflow-hidden mb-4">
             <div class="flex items-center gap-2 px-4 py-3 bg-gray-50 border-b border-gray-200">
                 <i class="fas fa-desktop text-[#30A38A]"></i>
-                <h2 class="font-bold text-gray-900 text-sm">متطلبات تشغيل {{ $post->title }} للكمبيوتر</h2>
+                <h2 class="font-bold text-gray-900 text-sm">متطلبات تشغيل {{ $kw }}</h2>
             </div>
+            @if($post->sys_req_os || $post->sys_req_cpu || $post->sys_req_gpu || $post->sys_req_ram || $post->sys_req_storage || $post->sys_req_software)
+            <div class="overflow-hidden">
+                <table class="w-full text-sm">
+                    <tbody>
+                        @foreach([
+                            ['نظام التشغيل', 'sys_req_os'],
+                            ['المعالج', 'sys_req_cpu'],
+                            ['كارت الشاشة', 'sys_req_gpu'],
+                            ['الذاكرة RAM', 'sys_req_ram'],
+                            ['مساحة التخزين', 'sys_req_storage'],
+                            ['البرامج المطلوبة', 'sys_req_software'],
+                        ] as [$rowLabel, $field])
+                            @if($post->$field)
+                            <tr class="border-b border-gray-100 last:border-0">
+                                <td class="py-2.5 px-4 bg-gray-800 text-white font-medium w-2/5">{{ $rowLabel }}</td>
+                                <td class="py-2.5 px-4 text-gray-700">{{ $post->$field }}</td>
+                            </tr>
+                            @endif
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            @else
             <div class="p-4">
                 @foreach(array_filter(explode("\n", $post->system_requirements)) as $line)
                 <div class="flex items-start gap-2 mb-2">
@@ -210,6 +311,7 @@
                 </div>
                 @endforeach
             </div>
+            @endif
         </div>
         @endif
 
@@ -220,7 +322,7 @@
                 <i class="fas fa-balance-scale text-[#30A38A]"></i>
                 <h2 class="font-bold text-gray-900 text-sm">المميزات والعيوب</h2>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-0 divide-x-0 md:divide-x divide-y md:divide-y-0 divide-gray-200">
+            <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x-0 divide-gray-200">
                 @if($post->pros)
                 <div class="p-4">
                     <h3 class="font-bold text-green-600 mb-2 flex items-center gap-1 text-sm">
@@ -252,9 +354,6 @@
         </div>
         @endif
 
-        {{-- Screenshots placeholder (for future gallery feature) --}}
-        {{-- After adding gallery_images JSON field to posts table, display them here --}}
-
         {{-- YouTube Video --}}
         @if($post->youtube_url)
         @php
@@ -265,7 +364,7 @@
         <div class="bg-white border border-gray-200 rounded overflow-hidden mb-4">
             <div class="flex items-center gap-2 px-4 py-3 bg-gray-50 border-b border-gray-200">
                 <i class="fab fa-youtube text-red-500"></i>
-                <h2 class="font-bold text-gray-900 text-sm">فيديو شرح من داخل اللعبة</h2>
+                <h2 class="font-bold text-gray-900 text-sm">فيديو شرح {{ $kw }}</h2>
             </div>
             <div class="aspect-video">
                 <iframe src="https://www.youtube.com/embed/{{ $ytId }}"
@@ -277,12 +376,32 @@
         @endif
         @endif
 
+        {{-- Gallery / Screenshots --}}
+        @if($post->gallery_images && count($post->gallery_images))
+        <div class="bg-white border border-gray-200 rounded overflow-hidden mb-4">
+            <div class="flex items-center gap-2 px-4 py-3 bg-gray-50 border-b border-gray-200">
+                <i class="fas fa-images text-[#30A38A]"></i>
+                <h2 class="font-bold text-gray-900 text-sm">صور من داخل {{ $kw }}</h2>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-2 p-3">
+                @foreach($post->gallery_images as $img)
+                <a href="{{ asset('storage/'.$img) }}" target="_blank" class="block overflow-hidden rounded">
+                    <img src="{{ asset('storage/'.$img) }}"
+                         alt="{{ $post->title }} screenshot"
+                         class="w-full aspect-video object-cover hover:scale-105 transition duration-200"
+                         loading="lazy">
+                </a>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
         {{-- Star Rating --}}
         <div class="bg-white border border-gray-200 rounded overflow-hidden mb-4"
              x-data="ratingWidget({{ $post->id }}, {{ $post->average_rating }}, {{ $post->ratings_count }}, {{ $userRating ?? 'null' }})">
             <div class="flex items-center gap-2 px-4 py-3 bg-gray-50 border-b border-gray-200">
                 <i class="fas fa-star text-yellow-400"></i>
-                <h2 class="font-bold text-gray-900 text-sm">تقييم اللعبة</h2>
+                <h2 class="font-bold text-gray-900 text-sm">تقييم {{ $kw }}</h2>
             </div>
             <div class="p-4 flex items-center gap-6">
                 <div class="text-center border-l pl-6">
@@ -378,7 +497,6 @@
                 </h2>
             </div>
 
-            {{-- Comments List --}}
             @forelse($post->approvedComments as $comment)
             <div class="border-b border-gray-100 last:border-0 p-4">
                 <div class="flex items-center gap-3 mb-2">
@@ -396,7 +514,6 @@
             <p class="text-gray-500 text-sm p-4">لا توجد تعليقات بعد. كن أول من يعلّق!</p>
             @endforelse
 
-            {{-- Comment Form --}}
             <div class="border-t border-gray-200 p-4">
                 @if(session('comment_success'))
                 <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded mb-4 text-sm">
@@ -437,7 +554,7 @@
     </article>
 
     {{-- ═══════════════════════
-         Sidebar (LEFT in RTL)
+         Sidebar
     ═══════════════════════ --}}
     <div class="hidden lg:block w-72 flex-shrink-0">
         <x-front.sidebar :trending="$sidebarTrending" :tags="$sidebarTags" />

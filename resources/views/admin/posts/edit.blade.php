@@ -20,7 +20,7 @@ tinymce.init({
         'bullist numlist | outdent indent | link image media |',
         'table | code fullscreen | help'
     ].join(' '),
-    content_style: 'body { font-family: Tajawal, Arial, sans-serif; font-size: 16px; direction: rtl; text-align: right; padding: 12px; }',
+    content_style: 'body { font-family: Tajawal, Arial, sans-serif; font-size: 16px; direction: rtl; text-align: right; padding: 12px; } h2 { font-size: 1.25rem; font-weight: 700; border-bottom: 2px solid #30A38A; padding-bottom: 4px; margin-top: 1.5rem; } h3 { font-size: 1.1rem; font-weight: 600; margin-top: 1.25rem; }',
     images_upload_url: '{{ route("admin.media.upload") }}',
     images_upload_handler: (blobInfo, progress) => new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
@@ -37,9 +37,7 @@ tinymce.init({
         data.append('file', blobInfo.blob(), blobInfo.filename());
         xhr.send(data);
     }),
-    setup: editor => {
-        editor.on('change', () => editor.save());
-    }
+    setup: editor => { editor.on('change', () => editor.save()); }
 });
 </script>
 @endpush
@@ -48,18 +46,17 @@ tinymce.init({
 <form action="{{ route('admin.posts.update', $post) }}" method="POST" enctype="multipart/form-data" x-data="postForm()">
     @csrf @method('PUT')
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {{-- Main Column --}}
-        <div class="lg:col-span-2 space-y-4">
+    @if($errors->any())
+    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-4">
+        <ul class="list-disc list-inside text-sm space-y-1">
+            @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
+        </ul>
+    </div>
+    @endif
 
-            {{-- Validation errors --}}
-            @if($errors->any())
-            <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
-                <ul class="list-disc list-inside text-sm space-y-1">
-                    @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
-                </ul>
-            </div>
-            @endif
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {{-- ═══════════════ Main Column ═══════════════ --}}
+        <div class="lg:col-span-2 space-y-4">
 
             {{-- Title --}}
             <div class="bg-white rounded-xl p-5 shadow-sm">
@@ -71,20 +68,30 @@ tinymce.init({
             {{-- Excerpt --}}
             <div class="bg-white rounded-xl p-5 shadow-sm">
                 <div class="flex items-center justify-between mb-2">
-                    <label class="font-medium text-gray-700">المقتطف <span class="en-hint">Excerpt — short description</span></label>
+                    <label class="font-medium text-gray-700">المقتطف <span class="en-hint">Excerpt</span></label>
                     <button type="button" @click="generateAI('excerpt')" class="text-xs text-purple-600 hover:text-purple-800 flex items-center gap-1 transition">
-                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                        <span x-show="!loading.excerpt">توليد تلقائي</span>
-                        <span x-show="loading.excerpt" class="flex items-center gap-1"><div class="w-3 h-3 border border-purple-600 border-t-transparent rounded-full animate-spin"></div> جاري...</span>
+                        <span x-show="!loading.excerpt">✨ توليد تلقائي</span>
+                        <span x-show="loading.excerpt"><span class="inline-block w-3 h-3 border border-purple-600 border-t-transparent rounded-full animate-spin"></span> جاري...</span>
                     </button>
                 </div>
                 <textarea name="excerpt" id="excerpt" rows="3"
                     class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none">{{ old('excerpt', $post->excerpt) }}</textarea>
             </div>
 
+            {{-- Focus Keyword --}}
+            <div class="bg-white rounded-xl p-5 shadow-sm">
+                <label class="block font-medium text-gray-700 mb-2">
+                    الكلمة المفتاحية المحورية <span class="en-hint">Focus Keyword — used in article headings & sections</span>
+                </label>
+                <input type="text" name="focus_keyword" value="{{ old('focus_keyword', $post->focus_keyword) }}"
+                    class="w-full px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="مثال: تحميل لعبة GTA V">
+                <p class="text-xs text-gray-400 mt-1">تظهر في عناوين H2 والأقسام الرئيسية للمقال — Appears in H2 titles and main article sections</p>
+            </div>
+
             {{-- TinyMCE Content --}}
             <div class="bg-white rounded-xl p-5 shadow-sm">
-                <label class="block font-medium text-gray-700 mb-2">المحتوى الكامل <span class="en-hint">Full Content (main article body)</span></label>
+                <label class="block font-medium text-gray-700 mb-2">المحتوى الكامل <span class="en-hint">Full Content (use H2/H3 for headings)</span></label>
                 <textarea name="content" id="content">{{ old('content', $post->content) }}</textarea>
             </div>
 
@@ -95,7 +102,7 @@ tinymce.init({
                     <div>
                         <label class="text-sm font-medium text-gray-600 mb-1 block">الإصدار <span class="en-hint">Version</span></label>
                         <input type="text" name="version" value="{{ old('version', $post->version) }}"
-                            class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="مثال: 2.5.1">
+                            class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div>
                         <label class="text-sm font-medium text-gray-600 mb-1 block">المطور <span class="en-hint">Developer</span></label>
@@ -105,7 +112,12 @@ tinymce.init({
                     <div>
                         <label class="text-sm font-medium text-gray-600 mb-1 block">حجم الملف <span class="en-hint">File Size</span></label>
                         <input type="text" name="file_size" value="{{ old('file_size', $post->file_size) }}"
-                            class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="مثال: 4.2 GB">
+                            class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-600 mb-1 block">اللغة <span class="en-hint">Game Language</span></label>
+                        <input type="text" name="game_language" value="{{ old('game_language', $post->game_language) }}"
+                            class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="العربية / English">
                     </div>
                     <div>
                         <label class="text-sm font-medium text-gray-600 mb-1 block">المنصة <span class="en-hint">Platform</span></label>
@@ -125,7 +137,7 @@ tinymce.init({
                         <input type="date" name="updated_date" value="{{ old('updated_date', $post->updated_date?->format('Y-m-d')) }}"
                             class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
-                    <div class="col-span-2 md:col-span-3">
+                    <div class="col-span-2">
                         <label class="text-sm font-medium text-gray-600 mb-1 block">رابط يوتيوب <span class="en-hint">YouTube URL</span></label>
                         <input type="url" name="youtube_url" value="{{ old('youtube_url', $post->youtube_url) }}"
                             class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://youtube.com/watch?v=...">
@@ -133,13 +145,34 @@ tinymce.init({
                 </div>
             </div>
 
+            {{-- System Requirements --}}
+            <div class="bg-white rounded-xl p-5 shadow-sm">
+                <h3 class="font-bold text-gray-800 mb-4">متطلبات التشغيل <span class="en-hint">System Requirements</span></h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    @foreach([
+                        ['sys_req_os',      'نظام التشغيل',      'OS',              'Windows 10 64-bit'],
+                        ['sys_req_cpu',     'المعالج',           'CPU',             'Intel Core i5-8400'],
+                        ['sys_req_gpu',     'كارت الشاشة',       'GPU',             'NVIDIA GTX 970 4GB'],
+                        ['sys_req_ram',     'الذاكرة RAM',        'RAM',             '8 GB'],
+                        ['sys_req_storage', 'مساحة التخزين',     'Storage',         '70 GB'],
+                        ['sys_req_software','البرامج المطلوبة',  'Required Software','DirectX 12'],
+                    ] as [$name, $ar, $en, $ph])
+                    <div>
+                        <label class="text-sm font-medium text-gray-600 mb-1 block">{{ $ar }} <span class="en-hint">{{ $en }}</span></label>
+                        <input type="text" name="{{ $name }}" value="{{ old($name, $post->$name) }}"
+                            class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="{{ $ph }}">
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+
             {{-- Detailed Sections --}}
             <div class="bg-white rounded-xl p-5 shadow-sm space-y-4">
                 <h3 class="font-bold text-gray-800">أقسام تفصيلية <span class="en-hint">Detailed Sections</span></h3>
                 @foreach([
-                    ['features', 'المميزات', 'Features'],
-                    ['system_requirements', 'متطلبات التشغيل', 'System Requirements'],
-                    ['whats_new', 'ما الجديد', "What's New"],
+                    ['features',    'المميزات',  'Features'],
+                    ['whats_new',   'ما الجديد', "What's New"],
                 ] as [$field, $label, $en])
                 <div>
                     <label class="text-sm font-medium text-gray-600 mb-1 block">{{ $label }} <span class="en-hint">{{ $en }}</span></label>
@@ -161,23 +194,18 @@ tinymce.init({
 
             {{-- SEO Fields --}}
             <div class="bg-white rounded-xl p-5 shadow-sm space-y-4">
-                <h3 class="font-bold text-gray-800 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                    إعدادات SEO
-                </h3>
+                <h3 class="font-bold text-gray-800">إعدادات SEO <span class="en-hint">SEO Settings</span></h3>
                 @foreach([
-                    ['meta_title', 'عنوان Meta', 'Meta Title (max 60 chars)', 'text', 'meta_title'],
-                    ['meta_description', 'وصف Meta', 'Meta Description (max 155 chars)', 'textarea', 'meta_description'],
-                    ['meta_keywords', 'الكلمات المفتاحية', 'Meta Keywords (comma-separated)', 'text', 'meta_keywords'],
+                    ['meta_title',       'عنوان Meta',          'Meta Title (max 60 chars)',       'text',     'meta_title'],
+                    ['meta_description', 'وصف Meta',            'Meta Description (max 155 chars)', 'textarea', 'meta_description'],
+                    ['meta_keywords',    'الكلمات المفتاحية',   'Meta Keywords (comma-separated)',  'text',     'meta_keywords'],
                 ] as [$field, $label, $en, $inputType, $aiAction])
                 <div>
                     <div class="flex items-center justify-between mb-1">
                         <label class="text-sm font-medium text-gray-600">{{ $label }} <span class="en-hint">{{ $en }}</span></label>
-                        <button type="button" @click="generateAI('{{ $aiAction }}')"
-                            class="text-xs text-purple-600 hover:text-purple-800 flex items-center gap-1">
-                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                            <span x-show="!loading['{{ $aiAction }}']">توليد تلقائي</span>
-                            <span x-show="loading['{{ $aiAction }}']"><div class="w-3 h-3 border border-purple-600 border-t-transparent rounded-full animate-spin inline-block"></div></span>
+                        <button type="button" @click="generateAI('{{ $aiAction }}')" class="text-xs text-purple-600 hover:text-purple-800 flex items-center gap-1">
+                            <span x-show="!loading['{{ $aiAction }}']">✨ توليد تلقائي</span>
+                            <span x-show="loading['{{ $aiAction }}']"><span class="inline-block w-3 h-3 border border-purple-600 border-t-transparent rounded-full animate-spin"></span></span>
                         </button>
                     </div>
                     @if($inputType === 'textarea')
@@ -191,7 +219,7 @@ tinymce.init({
                 @endforeach
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="text-sm font-medium text-gray-600 mb-1 block">Robots <span class="en-hint">Controls search engine crawling</span></label>
+                        <label class="text-sm font-medium text-gray-600 mb-1 block">Robots <span class="en-hint">Search engine crawling</span></label>
                         <input type="text" name="robots" value="{{ old('robots', $post->robots) }}"
                             class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
@@ -206,25 +234,26 @@ tinymce.init({
                 </div>
             </div>
 
-            {{-- Download Links (Livewire) --}}
+            {{-- Download Links (Livewire — full management) --}}
             <div class="bg-white rounded-xl p-5 shadow-sm">
                 <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                    روابط التحميل
+                    <i class="fas fa-download text-blue-600"></i>
+                    روابط التحميل <span class="en-hint">Download Links</span>
                 </h3>
                 @livewire('download-links-reorder', ['postId' => $post->id])
             </div>
 
         </div>
 
-        {{-- Sidebar Column --}}
+        {{-- ═══════════════ Sidebar Column ═══════════════ --}}
         <div class="space-y-4">
+
             {{-- Publish --}}
             <div class="bg-white rounded-xl p-5 shadow-sm">
                 <h3 class="font-bold text-gray-800 mb-4">النشر <span class="en-hint">Publishing</span></h3>
                 <div class="space-y-3">
                     <div>
-                        <label class="text-sm font-medium text-gray-600 mb-1 block">الحالة</label>
+                        <label class="text-sm font-medium text-gray-600 mb-1 block">الحالة <span class="en-hint">Status</span></label>
                         <select name="status" class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                             @foreach(['draft' => 'مسودة — Draft', 'pending' => 'قيد المراجعة — Pending', 'published' => 'منشور — Published', 'scheduled' => 'مجدول — Scheduled'] as $val => $label)
                             <option value="{{ $val }}" {{ old('status', $post->status) === $val ? 'selected' : '' }}>{{ $label }}</option>
@@ -232,7 +261,7 @@ tinymce.init({
                         </select>
                     </div>
                     <div>
-                        <label class="text-sm font-medium text-gray-600 mb-1 block">النوع</label>
+                        <label class="text-sm font-medium text-gray-600 mb-1 block">النوع <span class="en-hint">Post Type</span></label>
                         <select name="type" class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                             @foreach(['game' => 'لعبة — Game', 'software' => 'برنامج — Software', 'apk' => 'تطبيق أندرويد — Android App', 'blog' => 'مقال — Article', 'tutorial' => 'شرح — Tutorial', 'listicle' => 'قائمة — List', 'review' => 'مراجعة — Review'] as $val => $label)
                             <option value="{{ $val }}" {{ old('type', $post->type) === $val ? 'selected' : '' }}>{{ $label }}</option>
@@ -255,7 +284,7 @@ tinymce.init({
                     <button type="submit" class="flex-1 bg-blue-700 hover:bg-blue-800 text-white font-bold py-2.5 px-4 rounded-lg transition text-sm">حفظ التغييرات</button>
                     <a href="{{ url($post->slug) }}" target="_blank" class="flex-1 text-center bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2.5 px-4 rounded-lg transition text-sm">عرض</a>
                 </div>
-                <div class="mt-2 flex gap-2 text-xs text-gray-500 pt-2 border-t">
+                <div class="mt-2 flex gap-3 text-xs text-gray-500 pt-2 border-t">
                     <span>مشاهدات: {{ number_format($post->views) }}</span>
                     <span>•</span>
                     <span>تحميلات: {{ number_format($post->downloads) }}</span>
@@ -277,16 +306,50 @@ tinymce.init({
 
             {{-- Featured Image --}}
             <div class="bg-white rounded-xl p-5 shadow-sm">
-                <label class="block font-medium text-gray-700 mb-3">الصورة الرئيسية <span class="en-hint">Featured Image</span></label>
+                <label class="block font-medium text-gray-700 mb-3">الصورة الرئيسية <span class="en-hint">Featured Image (thumbnail)</span></label>
                 @if($post->featured_image)
-                <div class="mb-3">
-                    <img src="{{ asset('storage/'.$post->featured_image) }}" alt="{{ $post->title }}"
-                        class="w-full aspect-video object-cover rounded-lg" loading="lazy">
-                </div>
+                <img src="{{ asset('storage/'.$post->featured_image) }}" alt="{{ $post->title }}"
+                    class="w-full aspect-video object-cover rounded-lg mb-3" loading="lazy">
                 @endif
                 <input type="file" name="featured_image" accept="image/*"
                     class="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                <p class="text-xs text-gray-400 mt-1">سيتم التحويل تلقائياً إلى WebP (800×450)</p>
+                <p class="text-xs text-gray-400 mt-1">Auto-converted to WebP 800×450</p>
+            </div>
+
+            {{-- Banner Image --}}
+            <div class="bg-white rounded-xl p-5 shadow-sm">
+                <label class="block font-medium text-gray-700 mb-3">
+                    <i class="fas fa-image text-[#30A38A] ml-1"></i>
+                    صورة البانر <span class="en-hint">Banner Image — top of article</span>
+                </label>
+                @if($post->banner_image)
+                <img src="{{ asset('storage/'.$post->banner_image) }}" alt="banner"
+                    class="w-full object-cover rounded-lg mb-3" style="max-height:120px;" loading="lazy">
+                @endif
+                <input type="file" name="banner_image" accept="image/*"
+                    class="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
+            </div>
+
+            {{-- Gallery Images --}}
+            <div class="bg-white rounded-xl p-5 shadow-sm">
+                <label class="block font-medium text-gray-700 mb-3">
+                    <i class="fas fa-images text-purple-500 ml-1"></i>
+                    صور المعرض <span class="en-hint">Gallery / Screenshots</span>
+                </label>
+                @if($post->gallery_images && count($post->gallery_images))
+                <div class="grid grid-cols-3 gap-2 mb-3">
+                    @foreach($post->gallery_images as $img)
+                    <img src="{{ asset('storage/'.$img) }}" class="w-full aspect-video object-cover rounded" loading="lazy">
+                    @endforeach
+                </div>
+                <label class="flex items-center gap-2 text-sm text-red-600 mb-2 cursor-pointer">
+                    <input type="checkbox" name="clear_gallery" value="1" class="rounded">
+                    حذف جميع الصور الحالية — Clear current gallery
+                </label>
+                @endif
+                <input type="file" name="gallery_images[]" accept="image/*" multiple
+                    class="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
+                <p class="text-xs text-gray-400 mt-1">رفع صور جديدة يستبدل الصور الحالية — Uploading new images replaces current gallery</p>
             </div>
 
             {{-- Tags --}}
@@ -296,7 +359,6 @@ tinymce.init({
                     value="{{ old('tags', $post->tags->pluck('name')->join(', ')) }}"
                     class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="وسم1, وسم2, وسم3">
-                <p class="text-xs text-gray-400 mt-1">مفصولة بفواصل</p>
             </div>
 
             {{-- Post Stats --}}
