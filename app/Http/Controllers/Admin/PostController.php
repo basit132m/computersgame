@@ -113,6 +113,9 @@ class PostController extends Controller
     {
         $validated = $this->validatePost($request);
 
+        // Never overwrite image fields with null — only update when a new file is uploaded
+        unset($validated['featured_image'], $validated['banner_image'], $validated['gallery_images']);
+
         if ($request->slug !== $post->slug) {
             $validated['slug'] = $this->generateSlug($request->slug ?: $request->title, $post->id);
         }
@@ -157,7 +160,8 @@ class PostController extends Controller
             $validated['gallery_images'] = null;
         }
 
-        if ($request->status === 'published' && empty($post->published_at)) {
+        // Set published_at when publishing for the first time
+        if ($request->status === 'published' && empty($validated['published_at']) && empty($post->published_at)) {
             $validated['published_at'] = now();
         }
 
