@@ -9,18 +9,18 @@
         <div class="bg-white rounded-xl p-5 shadow-sm space-y-4">
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">اسم التصنيف <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">اسم التصنيف <span class="en-hint">Category Name</span> <span class="text-red-500">*</span></label>
                     <input type="text" name="name" value="{{ old('name', $category->name) }}" required
                         class="w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Slug</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Slug <span class="en-hint">URL path</span></label>
                     <input type="text" name="slug" value="{{ old('slug', $category->slug) }}"
                         class="w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono">
                 </div>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">التصنيف الرئيسي</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">التصنيف الرئيسي <span class="en-hint">Parent Category</span></label>
                 <select name="parent_id" class="w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="">— بدون تصنيف رئيسي —</option>
                     @foreach($parents as $parent)
@@ -29,29 +29,29 @@
                 </select>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">الوصف</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">الوصف <span class="en-hint">Description</span></label>
                 <textarea name="description" rows="3"
                     class="w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('description', $category->description) }}</textarea>
             </div>
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">عنوان Meta</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">عنوان Meta <span class="en-hint">Meta Title</span></label>
                     <input type="text" name="meta_title" value="{{ old('meta_title', $category->meta_title) }}"
                         class="w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">ترتيب العرض</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">ترتيب العرض <span class="en-hint">Display Order</span></label>
                     <input type="number" name="sort_order" value="{{ old('sort_order', $category->sort_order) }}"
                         class="w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">وصف Meta</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">وصف Meta <span class="en-hint">Meta Description</span></label>
                 <textarea name="meta_description" rows="2"
                     class="w-full px-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('meta_description', $category->meta_description) }}</textarea>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">صورة التصنيف</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">صورة التصنيف <span class="en-hint">Category Image</span></label>
                 @if($category->image)
                 <img src="{{ asset('storage/'.$category->image) }}" class="w-24 h-24 object-cover rounded-lg mb-2">
                 @endif
