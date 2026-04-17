@@ -50,21 +50,21 @@ class PostController extends Controller
         if ($request->hasFile('featured_image')) {
             $validated['featured_image'] = ImageService::uploadWebP(
                 $request->file('featured_image'),
-                'posts'
+                'posts', 250, 200
             );
         }
 
         if ($request->hasFile('banner_image')) {
             $validated['banner_image'] = ImageService::uploadWebP(
                 $request->file('banner_image'),
-                'posts'
+                'posts', 743, 418
             );
         }
 
         if ($request->hasFile('gallery_images')) {
             $gallery = [];
             foreach ($request->file('gallery_images') as $img) {
-                $gallery[] = ImageService::uploadWebP($img, 'gallery');
+                $gallery[] = ImageService::uploadWebP($img, 'gallery', 743, 418);
             }
             $validated['gallery_images'] = $gallery;
         }
@@ -126,7 +126,7 @@ class PostController extends Controller
             }
             $validated['featured_image'] = ImageService::uploadWebP(
                 $request->file('featured_image'),
-                'posts'
+                'posts', 250, 200
             );
         }
 
@@ -136,7 +136,7 @@ class PostController extends Controller
             }
             $validated['banner_image'] = ImageService::uploadWebP(
                 $request->file('banner_image'),
-                'posts'
+                'posts', 743, 418
             );
         }
 
@@ -148,7 +148,7 @@ class PostController extends Controller
             }
             $gallery = [];
             foreach ($request->file('gallery_images') as $img) {
-                $gallery[] = ImageService::uploadWebP($img, 'gallery');
+                $gallery[] = ImageService::uploadWebP($img, 'gallery', 743, 418);
             }
             $validated['gallery_images'] = $gallery;
         } elseif ($request->boolean('clear_gallery')) {
@@ -205,7 +205,7 @@ class PostController extends Controller
 
         $gallery = $post->gallery_images ?? [];
         foreach ($request->file('images') as $img) {
-            $gallery[] = ImageService::uploadWebP($img, 'gallery');
+            $gallery[] = ImageService::uploadWebP($img, 'gallery', 743, 418);
         }
         $post->update(['gallery_images' => $gallery]);
         Cache::flush();

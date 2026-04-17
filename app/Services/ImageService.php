@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class ImageService
 {
-    public static function uploadWebP(UploadedFile $file, string $directory = 'uploads'): string
+    public static function uploadWebP(UploadedFile $file, string $directory = 'uploads', int $width = 743, int $height = 418): string
     {
         $realPath = $file->getRealPath();
         $uuid     = Str::uuid();
@@ -19,11 +19,11 @@ class ImageService
             $filename = $uuid . '.webp';
             $path     = $directory . '/' . $filename;
 
-            $large = self::coverCrop($source, 800, 450);
+            $large = self::coverCrop($source, $width, $height);
             Storage::disk('public')->put($path, self::toWebP($large, 85));
             imagedestroy($large);
 
-            $thumb = self::coverCrop($source, 400, 225);
+            $thumb = self::coverCrop($source, (int)round($width / 2), (int)round($height / 2));
             Storage::disk('public')->put($directory . '/thumbs/' . $filename, self::toWebP($thumb, 80));
             imagedestroy($thumb);
 
