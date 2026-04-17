@@ -104,9 +104,7 @@
             @endphp
             @if($hasSpecs)
             <div class="p-5 border-b border-gray-100">
-                <div class="text-center mb-4">
-                    <h2 class="font-bold text-gray-800 text-base">معلومات حول تحميل {{ $kw }}</h2>
-                </div>
+                <h2 class="text-center font-bold text-gray-800 text-base h2-line">معلومات حول تحميل {{ $kw }}</h2>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                     {{-- اسم اللعبة — highlighted --}}
                     <div class="rounded-xl overflow-hidden border border-gray-200 shadow-sm">
@@ -207,7 +205,7 @@
             {{-- ③ مميزات --}}
             @if($post->features)
             <div class="p-5 border-b border-gray-100">
-                <h2 class="text-center font-bold text-gray-800 text-base mb-4">مميزات {{ $kw }}</h2>
+                <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line">مميزات {{ $kw }}</h2>
                 @foreach(array_filter(explode("\n", $post->features)) as $line)
                 <div class="flex items-start gap-2 mb-2">
                     <i class="fas fa-check text-[#30A38A] text-xs mt-1 flex-shrink-0"></i>
@@ -220,7 +218,7 @@
             {{-- ④ المميزات والعيوب --}}
             @if($post->pros || $post->cons)
             <div class="p-5 border-b border-gray-100">
-                <h2 class="text-center font-bold text-gray-800 text-base mb-4">المميزات والعيوب</h2>
+                <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line">المميزات والعيوب</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     @if($post->pros)
                     <div>
@@ -241,7 +239,7 @@
             {{-- ⑤ ما الجديد --}}
             @if($post->whats_new)
             <div class="p-5 border-b border-gray-100">
-                <h2 class="text-center font-bold text-gray-800 text-base mb-4">ما الجديد في هذا الإصدار</h2>
+                <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line">ما الجديد في هذا الإصدار</h2>
                 <div class="text-sm text-gray-700 prose max-w-none">{!! nl2br(e($post->whats_new)) !!}</div>
             </div>
             @endif
@@ -255,7 +253,7 @@
             @if($ytId)
             <div class="border-b border-gray-100">
                 <div class="px-5 pt-5 pb-3">
-                    <h2 class="text-center font-bold text-gray-800 text-base mb-4">فيديو شرح {{ $kw }}</h2>
+                    <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line">فيديو شرح {{ $kw }}</h2>
                 </div>
                 <div class="aspect-video">
                     <iframe src="https://www.youtube.com/embed/{{ $ytId }}"
@@ -269,7 +267,7 @@
             {{-- ⑦ صور من داخل --}}
             @if($post->gallery_images && count($post->gallery_images))
             <div class="p-5 border-b border-gray-100">
-                <h2 class="text-center font-bold text-gray-800 text-base mb-4">صور من داخل {{ $kw }}</h2>
+                <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line">صور من داخل {{ $kw }}</h2>
                 <div class="flex flex-col gap-3">
                     @foreach($post->gallery_images as $img)
                     <a href="{{ asset('storage/'.$img) }}" target="_blank" class="block overflow-hidden rounded-lg">
@@ -289,7 +287,7 @@
             @endphp
             @if($hasSysReq)
             <div class="p-5 border-b border-gray-100">
-                <h2 class="text-center font-bold text-gray-800 text-base mb-4">متطلبات تشغيل {{ $kw }}</h2>
+                <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line">متطلبات تشغيل {{ $kw }}</h2>
                 @if($post->sys_req_os || $post->sys_req_cpu || $post->sys_req_gpu || $post->sys_req_ram || $post->sys_req_storage || $post->sys_req_software)
                 <div class="overflow-hidden rounded-lg border border-gray-200">
                     <table class="w-full text-sm">
@@ -361,7 +359,7 @@
             {{-- ⑩ تقييم --}}
             <div class="p-5 border-b border-gray-100"
                  x-data="ratingWidget({{ $post->id }}, {{ $post->average_rating }}, {{ $post->ratings_count }}, {{ $userRating ?? 'null' }})">
-                <h2 class="text-center font-bold text-gray-800 text-base mb-4">تقييم {{ $kw }}</h2>
+                <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line">تقييم {{ $kw }}</h2>
                 <div class="flex items-center gap-6">
                     <div class="text-center border-l pl-6">
                         <p class="text-4xl font-bold text-gray-800" x-text="avgRating.toFixed(1)"></p>
@@ -383,7 +381,7 @@
 
             {{-- ⑪ مشاركة المقال --}}
             <div class="p-5">
-                <h2 class="text-center font-bold text-gray-800 text-base mb-4">مشاركة المقال</h2>
+                <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line">مشاركة المقال</h2>
                 <div class="flex flex-wrap gap-2">
                     <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url($post->slug)) }}"
                        target="_blank" rel="noopener nofollow"
