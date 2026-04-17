@@ -384,12 +384,12 @@ tinymce.init({
                     <label class="text-xs font-medium text-gray-600 mb-1 block">
                         إضافة صور جديدة <span class="en-hint">Add more images (appends to existing)</span>
                     </label>
-                    <input type="file" id="gallery-add-input" accept="image/*" multiple
+                    <input type="file" name="gallery_images[]" accept="image/*" multiple
                         class="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 mb-2">
-                    <button type="button" id="gallery-add-btn"
-                        onclick="addGalleryImages('{{ route('admin.posts.gallery.add', $post) }}')"
+                    <p class="text-xs text-gray-400 mb-2">اختر الصور ثم اضغط "حفظ التغييرات" أعلاه — Select images then click Save</p>
+                    <button type="submit"
                         class="w-full bg-purple-600 hover:bg-purple-700 text-white text-sm font-bold py-2 rounded-lg transition">
-                        <i class="fas fa-upload ml-1"></i> رفع الصور — Upload Images
+                        <i class="fas fa-upload ml-1"></i> حفظ مع الصور — Save with Images
                     </button>
                 </div>
             </div>

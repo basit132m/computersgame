@@ -8,11 +8,11 @@
         @if($post->featured_image)
         <img src="{{ \App\Services\ImageService::getThumbUrl($post->featured_image) }}"
              alt="{{ $post->title }}"
-             class="w-[250px] h-[250px] object-cover rounded group-hover:opacity-90 transition"
-             loading="lazy" width="250" height="250">
+             class="w-32 h-24 object-cover rounded group-hover:opacity-90 transition"
+             loading="lazy" width="128" height="96">
         @else
-        <div class="w-[250px] h-[250px] bg-gradient-to-br from-gray-100 to-gray-200 rounded flex items-center justify-center">
-            <i class="fas fa-gamepad text-gray-400 text-4xl"></i>
+        <div class="w-32 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded flex items-center justify-center">
+            <i class="fas fa-gamepad text-gray-400 text-2xl"></i>
         </div>
         @endif
     </a>

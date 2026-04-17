@@ -50,7 +50,7 @@ class PostController extends Controller
         if ($request->hasFile('featured_image')) {
             $validated['featured_image'] = ImageService::uploadWebP(
                 $request->file('featured_image'),
-                'posts', 250, 250
+                'posts', 250, 200
             );
         }
 
@@ -126,7 +126,7 @@ class PostController extends Controller
             }
             $validated['featured_image'] = ImageService::uploadWebP(
                 $request->file('featured_image'),
-                'posts', 250, 250
+                'posts', 250, 200
             );
         }
 
@@ -141,12 +141,7 @@ class PostController extends Controller
         }
 
         if ($request->hasFile('gallery_images')) {
-            if ($post->gallery_images) {
-                foreach ($post->gallery_images as $img) {
-                    ImageService::delete($img);
-                }
-            }
-            $gallery = [];
+            $gallery = $post->gallery_images ?? [];
             foreach ($request->file('gallery_images') as $img) {
                 $gallery[] = ImageService::uploadWebP($img, 'gallery', 743, 418);
             }
