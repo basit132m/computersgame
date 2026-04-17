@@ -138,7 +138,7 @@
     {{-- ═══════════════════════
          Sidebar (LEFT in RTL)
     ═══════════════════════ --}}
-    <div class="hidden lg:block w-72 flex-shrink-0">
+    <div class="hidden lg:block w-80 flex-shrink-0">
         <x-front.sidebar :trending="$sidebarTrending" :tags="$sidebarTags" />
     </div>
 

@@ -383,12 +383,12 @@
                 <i class="fas fa-images text-[#30A38A]"></i>
                 <h2 class="font-bold text-gray-900 text-sm">صور من داخل {{ $kw }}</h2>
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-2 p-3">
+            <div class="flex flex-col gap-3 p-3">
                 @foreach($post->gallery_images as $img)
                 <a href="{{ asset('storage/'.$img) }}" target="_blank" class="block overflow-hidden rounded">
                     <img src="{{ asset('storage/'.$img) }}"
                          alt="{{ $post->title }} screenshot"
-                         class="w-full aspect-video object-cover hover:scale-105 transition duration-200"
+                         class="w-full object-cover hover:opacity-90 transition duration-200"
                          loading="lazy">
                 </a>
                 @endforeach
@@ -556,7 +556,7 @@
     {{-- ═══════════════════════
          Sidebar
     ═══════════════════════ --}}
-    <div class="hidden lg:block w-72 flex-shrink-0">
+    <div class="hidden lg:block w-80 flex-shrink-0">
         <x-front.sidebar :trending="$sidebarTrending" :tags="$sidebarTags" />
     </div>
 

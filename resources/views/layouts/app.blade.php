@@ -85,7 +85,7 @@
 
     {{-- Row 1: Black bar — Search | Logo | Social --}}
     <div class="bg-black">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
 
             {{-- Right: Social Icons --}}
             <div class="flex items-center gap-3">
@@ -155,7 +155,7 @@
 
     {{-- Row 2: Categories nav — White background --}}
     <div class="bg-white border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4">
+        <div class="max-w-7xl mx-auto px-6">
 
             {{-- Desktop categories --}}
             <div class="hidden md:flex items-center gap-2 py-2 overflow-x-auto scrollbar-hide">
@@ -216,7 +216,7 @@
 @adslot('header_ad')
 
 {{-- Main Content --}}
-<main class="max-w-7xl mx-auto px-4 py-6">
+<main class="max-w-7xl mx-auto px-6 py-6">
     @yield('content')
 </main>
 
@@ -230,7 +230,7 @@
 
     {{-- Main Footer: Dark like header --}}
     <div class="bg-black text-white">
-        <div class="max-w-7xl mx-auto px-4 py-10">
+        <div class="max-w-7xl mx-auto px-6 py-10">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
 
                 {{-- Logo + Description + Social --}}
@@ -301,7 +301,7 @@
 
     {{-- Copyright Bar --}}
     <div class="bg-gray-950 border-t border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-500">
+        <div class="max-w-7xl mx-auto px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-500">
             <div class="flex items-center gap-4">
                 <a href="{{ route('contact') }}" class="hover:text-[#30A38A] transition">اتصل بنا</a>
                 <a href="{{ route('privacy') }}" class="hover:text-[#30A38A] transition">سياسة الخصوصية</a>
