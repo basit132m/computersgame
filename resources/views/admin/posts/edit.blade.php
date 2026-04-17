@@ -234,13 +234,66 @@ tinymce.init({
                 </div>
             </div>
 
-            {{-- Download Links (Livewire — full management) --}}
-            <div class="bg-white rounded-xl p-5 shadow-sm">
+            {{-- Download Links --}}
+            <div class="bg-white rounded-xl p-5 shadow-sm" x-data="{ newLinks: [] }">
                 <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
                     <i class="fas fa-download text-blue-600"></i>
                     روابط التحميل <span class="en-hint">Download Links</span>
                 </h3>
-                @livewire('download-links-reorder', ['postId' => $post->id])
+
+                {{-- Existing links --}}
+                @if($post->downloadLinks->count())
+                <div class="space-y-2 mb-4">
+                    @foreach($post->downloadLinks as $link)
+                    <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
+                        <div class="flex-1 min-w-0">
+                            <p class="font-semibold text-sm text-gray-800">{{ $link->label }}</p>
+                            <p class="text-xs text-gray-500 truncate">{{ $link->url }}</p>
+                            @if($link->file_size || $link->version)
+                            <p class="text-xs text-gray-400 mt-0.5">{{ $link->file_size }} {{ $link->version ? '— v'.$link->version : '' }}</p>
+                            @endif
+                        </div>
+                        <button type="button"
+                            onclick="deleteDownloadLink({{ $link->id }})"
+                            class="text-red-400 hover:text-red-600 transition flex-shrink-0" title="حذف">
+                            <i class="fas fa-trash text-sm"></i>
+                        </button>
+                    </div>
+                    @endforeach
+                </div>
+                @else
+                <p class="text-gray-400 text-sm mb-4">لا توجد روابط تحميل بعد — No download links yet</p>
+                @endif
+
+                {{-- Add new links — submitted with main form --}}
+                <div class="border-t pt-4">
+                    <p class="text-xs font-semibold text-gray-600 mb-3">إضافة روابط جديدة <span class="en-hint">Add New Links</span></p>
+                    <template x-for="(link, idx) in newLinks" :key="idx">
+                        <div class="grid grid-cols-2 gap-2 mb-2 p-3 bg-gray-50 rounded-lg relative">
+                            <input type="text" :name="'new_download_links['+idx+'][label]'" x-model="link.label"
+                                placeholder="العنوان* (مثل: جوجل درايف)"
+                                class="col-span-2 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="url" :name="'new_download_links['+idx+'][url]'" x-model="link.url"
+                                placeholder="رابط التحميل*"
+                                class="col-span-2 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="text" :name="'new_download_links['+idx+'][file_size]'" x-model="link.file_size"
+                                placeholder="حجم الملف"
+                                class="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="text" :name="'new_download_links['+idx+'][version]'" x-model="link.version"
+                                placeholder="الإصدار"
+                                class="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <button type="button" @click="newLinks.splice(idx, 1)"
+                                class="absolute top-1 left-1 text-red-400 hover:text-red-600 text-xs p-1">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </template>
+                    <button type="button" @click="newLinks.push({label:'',url:'',file_size:'',version:''})"
+                        class="flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm font-medium mt-1">
+                        <i class="fas fa-plus text-xs"></i> إضافة رابط — Add Link
+                    </button>
+                    <p class="text-xs text-gray-400 mt-2">أضف الروابط ثم اضغط "حفظ التغييرات" — Add links then click Save Changes</p>
+                </div>
             </div>
 
         </div>
@@ -419,6 +472,17 @@ tinymce.init({
 
 @push('scripts')
 <script>
+function deleteDownloadLink(id) {
+    if (!confirm('حذف هذا الرابط؟')) return;
+    const token = document.querySelector('meta[name=csrf-token]').content;
+    fetch('/admin/download-links/' + id, {
+        method: 'DELETE',
+        headers: { 'X-CSRF-TOKEN': token, 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: '_token=' + encodeURIComponent(token),
+    }).then(() => window.location.reload())
+      .catch(() => alert('حدث خطأ'));
+}
+
 function deletePostImage(url, msg) {
     if (!confirm(msg)) return;
     const token = document.querySelector('meta[name=csrf-token]').content;

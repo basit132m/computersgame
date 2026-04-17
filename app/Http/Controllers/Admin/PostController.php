@@ -167,6 +167,21 @@ class PostController extends Controller
             $post->tags()->sync($tagIds);
         }
 
+        if ($request->has('new_download_links')) {
+            $sortOffset = $post->downloadLinks()->count();
+            foreach ($request->new_download_links as $i => $linkData) {
+                if (!empty($linkData['url'])) {
+                    $post->downloadLinks()->create([
+                        'label'      => $linkData['label'] ?? 'تحميل مباشر',
+                        'url'        => $linkData['url'],
+                        'file_size'  => $linkData['file_size'] ?? null,
+                        'version'    => $linkData['version'] ?? null,
+                        'sort_order' => $sortOffset + $i,
+                    ]);
+                }
+            }
+        }
+
         Cache::flush();
 
         return back()->with('success', 'تم تحديث المقال بنجاح');

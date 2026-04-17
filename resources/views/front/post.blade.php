@@ -84,17 +84,6 @@
                 </div>
             </div>
 
-            {{-- Download Button --}}
-            @if($post->downloadLinks->count())
-            <div class="px-4 pb-4">
-                <a href="{{ route('download.show', $post->slug) }}" target="_blank"
-                   onclick="trackDownload({{ $post->id }})"
-                   class="flex items-center justify-center gap-3 bg-green-500 hover:bg-green-600 text-white font-bold text-lg py-4 px-10 rounded-lg transition w-full shadow-sm">
-                    <i class="fas fa-download text-xl"></i>
-                    DOWNLOAD
-                </a>
-            </div>
-            @endif
         </div>
 
         {{-- Banner Image --}}
@@ -390,6 +379,32 @@
                          alt="{{ $post->title }} screenshot"
                          class="w-full object-cover hover:opacity-90 transition duration-200"
                          loading="lazy">
+                </a>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
+        {{-- Download Buttons — below gallery --}}
+        @if($post->downloadLinks->count())
+        <div class="bg-white border border-gray-200 rounded overflow-hidden mb-4">
+            <div class="flex items-center gap-2 px-4 py-3 bg-gray-50 border-b border-gray-200">
+                <i class="fas fa-download text-[#30A38A]"></i>
+                <h2 class="font-bold text-gray-900 text-sm">تحميل {{ $kw }}</h2>
+            </div>
+            <div class="p-4 flex flex-col gap-3">
+                @foreach($post->downloadLinks as $link)
+                <a href="{{ route('download.show', $post->slug) }}" target="_blank"
+                   onclick="trackDownload({{ $post->id }})"
+                   class="flex items-center justify-between gap-3 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-5 rounded-lg transition shadow-sm">
+                    <span class="flex items-center gap-2">
+                        <i class="fas fa-download"></i>
+                        {{ $link->label }}
+                    </span>
+                    <span class="flex items-center gap-3 text-sm font-normal opacity-90">
+                        @if($link->file_size)<span>{{ $link->file_size }}</span>@endif
+                        @if($link->version)<span>v{{ $link->version }}</span>@endif
+                    </span>
                 </a>
                 @endforeach
             </div>
