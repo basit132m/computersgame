@@ -55,43 +55,8 @@
             </div>
         </div>
 
-        {{-- Most Downloaded --}}
-        @if($mostDownloaded->count())
-        <div class="bg-white border border-gray-200 rounded overflow-hidden mb-5">
-            <div class="flex items-center gap-2 px-4 py-3 border-b border-gray-200 bg-gray-50">
-                <i class="fas fa-download text-[#30A38A] text-sm"></i>
-                <h2 class="font-bold text-gray-900">الأكثر تحميلاً على الإطلاق</h2>
-            </div>
-            <div class="px-4">
-                @foreach($mostDownloaded as $post)
-                    <x-front.post-card :post="$post" variant="list" />
-                @endforeach
-            </div>
-        </div>
-        @endif
-
         {{-- In-Content Ad --}}
         @adslot('in_content_ad')
-
-        {{-- Latest Games --}}
-        @if($latestGames->count())
-        <div class="bg-white border border-gray-200 rounded overflow-hidden mb-5">
-            <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-gray-50">
-                <h2 class="font-bold text-gray-900 flex items-center gap-2">
-                    <i class="fas fa-gamepad text-[#30A38A] text-sm"></i>
-                    أحدث الألعاب
-                </h2>
-                <a href="{{ route('category.show', 'games') }}" class="text-xs text-[#30A38A] hover:underline">
-                    عرض الكل <i class="fas fa-angle-left text-xs"></i>
-                </a>
-            </div>
-            <div class="px-4">
-                @foreach($latestGames as $post)
-                    <x-front.post-card :post="$post" variant="list" />
-                @endforeach
-            </div>
-        </div>
-        @endif
 
         {{-- Latest Software --}}
         @if($latestSoftware->count())

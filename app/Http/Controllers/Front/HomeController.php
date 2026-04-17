@@ -21,14 +21,6 @@ class HomeController extends Controller
                 ->get();
         });
 
-        $mostDownloaded = Cache::remember('home_most_downloaded', 3600, function () {
-            return Post::published()->orderByDesc('downloads')->limit(8)->get();
-        });
-
-        $latestGames = Cache::remember('home_latest_games', 3600, function () {
-            return Post::published()->ofType('game')->latest('published_at')->limit(8)->get();
-        });
-
         $latestSoftware = Cache::remember('home_latest_software', 3600, function () {
             return Post::published()->ofType('software')->latest('published_at')->limit(8)->get();
         });
@@ -62,7 +54,7 @@ class HomeController extends Controller
         });
 
         return view('front.home', compact(
-            'trending', 'mostDownloaded', 'latestGames', 'latestSoftware',
+            'trending', 'latestSoftware',
             'latestApks', 'latestArticles', 'categories', 'sidebarTrending', 'sidebarTags',
             'latestPosts'
         ));
