@@ -110,6 +110,11 @@ tinymce.init({
                             class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div>
+                        <label class="text-sm font-medium text-gray-600 mb-1 block">الناشر <span class="en-hint">Publisher</span></label>
+                        <input type="text" name="publisher" value="{{ old('publisher', $post->publisher) }}"
+                            class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
                         <label class="text-sm font-medium text-gray-600 mb-1 block">حجم الملف <span class="en-hint">File Size</span></label>
                         <input type="text" name="file_size" value="{{ old('file_size', $post->file_size) }}"
                             class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">

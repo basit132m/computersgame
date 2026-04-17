@@ -265,6 +265,7 @@ class PostController extends Controller
             'gallery_images.*'    => 'image|max:5120',
             'version'             => 'nullable|string|max:50',
             'developer'           => 'nullable|string|max:255',
+            'publisher'           => 'nullable|string|max:255',
             'file_size'           => 'nullable|string|max:50',
             'game_language'       => 'nullable|string|max:100',
             'platform'            => 'required|in:pc,android,ios,mac,all',

@@ -98,9 +98,9 @@
 
             {{-- ① معلومات حول --}}
             @php
-                $hasSpecs = $post->version || $post->developer || $post->file_size
+                $hasSpecs = $post->version || $post->developer || $post->publisher || $post->file_size
                          || $post->updated_date || $post->game_language
-                         || $post->category || $post->platform;
+                         || $post->category || $post->platform || $post->published_at;
             @endphp
             @if($hasSpecs)
             <div class="p-5 border-b border-gray-100">
@@ -124,6 +124,22 @@
                         <p class="text-xs mb-1" style="color:#4a6b7a;">الشركة المنتجة</p>
                         <div class="w-8 h-px bg-gray-300 mb-1"></div>
                         <p class="text-sm font-bold text-gray-800">{{ $post->developer }}</p>
+                    </div>
+                    @endif
+                    @if($post->publisher)
+                    <div class="bg-gray-100 rounded-xl text-center py-4 px-2 flex flex-col items-center justify-between">
+                        <i class="fas fa-briefcase text-2xl mb-1" style="color:#4a6b7a;"></i>
+                        <p class="text-xs mb-1" style="color:#4a6b7a;">الناشر</p>
+                        <div class="w-8 h-px bg-gray-300 mb-1"></div>
+                        <p class="text-sm font-bold text-gray-800">{{ $post->publisher }}</p>
+                    </div>
+                    @endif
+                    @if($post->published_at)
+                    <div class="bg-gray-100 rounded-xl text-center py-4 px-2 flex flex-col items-center justify-between">
+                        <i class="fas fa-calendar-check text-2xl mb-1" style="color:#4a6b7a;"></i>
+                        <p class="text-xs mb-1" style="color:#4a6b7a;">تاريخ النشر</p>
+                        <div class="w-8 h-px bg-gray-300 mb-1"></div>
+                        <p class="text-sm font-bold text-gray-800">{{ $post->published_at->translatedFormat('j F Y') }}</p>
                     </div>
                     @endif
                     <div class="bg-gray-100 rounded-xl text-center py-4 px-2 flex flex-col items-center justify-between">
