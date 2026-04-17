@@ -34,7 +34,7 @@
     {{-- Google Fonts --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
 
     {{-- Font Awesome 6 --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
@@ -44,7 +44,7 @@
 
     <style>
         :root { --brand: #30A38A; --brand-dark: #268a74; }
-        body { font-family: 'Tajawal', 'Cairo', sans-serif; direction: rtl; text-align: right; }
+        body { font-family: 'Almarai', 'Tahoma', sans-serif; direction: rtl; text-align: right; }
         .brand-text { color: #30A38A; }
         .brand-bg { background-color: #30A38A; }
         .brand-border { border-color: #30A38A; }

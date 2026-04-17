@@ -128,111 +128,101 @@
         @adslot('in_content_ad')
 
         {{-- ════════════════════════════════════
-             Info Grid (4×2 cards)
+             Info Grid — 4×2 cards (matches reference design)
         ════════════════════════════════════ --}}
         @php
             $hasSpecs = $post->version || $post->developer || $post->file_size
-                     || $post->release_date || $post->updated_date || $post->game_language;
+                     || $post->release_date || $post->updated_date || $post->game_language
+                     || $post->category || $post->platform;
         @endphp
         @if($hasSpecs)
-        <div class="bg-white border border-gray-200 rounded overflow-hidden mb-4">
-            <div class="flex items-center gap-2 px-4 py-3 bg-gray-50 border-b border-gray-200">
-                <i class="fas fa-info-circle text-[#30A38A]"></i>
-                <h2 class="font-bold text-gray-900 text-sm">معلومات حول تحميل {{ $kw }}</h2>
+        <div class="bg-white border border-gray-200 rounded-xl overflow-hidden mb-4">
+            {{-- Section title bar --}}
+            <div class="text-center py-4 px-4 border-b border-gray-100 bg-gray-50">
+                <h2 class="font-bold text-gray-800 text-base">معلومات حول تحميل {{ $kw }} :</h2>
             </div>
-            <div class="grid grid-cols-2 gap-3 p-4">
-                {{-- Game Name --}}
-                <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
-                    <div class="w-9 h-9 bg-[#30A38A] rounded-lg flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-gamepad text-white text-sm"></i>
+            {{-- 4-column grid --}}
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
+
+                {{-- اسم اللعبة — highlighted card --}}
+                <div class="rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+                    <div class="flex flex-col items-center justify-center py-5 px-2" style="background:#4a6b7a;">
+                        <i class="fas fa-gamepad text-white text-3xl mb-2"></i>
+                        <p class="text-white text-xs font-medium">اسم اللعبة</p>
                     </div>
-                    <div class="min-w-0">
-                        <p class="text-xs text-gray-500">اسم اللعبة</p>
-                        <p class="text-sm font-bold text-gray-800 truncate">{{ $post->title }}</p>
+                    <div class="bg-white text-center py-3 px-2">
+                        <p class="text-sm font-bold text-gray-800 leading-snug">{{ Str::limit($post->title, 30) }}</p>
                     </div>
                 </div>
-                {{-- Developer --}}
+
+                {{-- الشركة المنتجة / Developer --}}
                 @if($post->developer)
-                <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
-                    <div class="w-9 h-9 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-user text-white text-sm"></i>
-                    </div>
-                    <div class="min-w-0">
-                        <p class="text-xs text-gray-500">المطور</p>
-                        <p class="text-sm font-bold text-gray-800 truncate">{{ $post->developer }}</p>
-                    </div>
+                <div class="bg-gray-100 rounded-xl text-center py-5 px-3 flex flex-col items-center">
+                    <i class="fas fa-building text-3xl mb-2" style="color:#4a6b7a;"></i>
+                    <p class="text-xs mb-2" style="color:#4a6b7a;">الشركة المنتجة</p>
+                    <div class="w-10 h-px bg-gray-300 mb-2"></div>
+                    <p class="text-sm font-bold text-gray-800 leading-snug">{{ $post->developer }}</p>
                 </div>
                 @endif
-                {{-- Platform --}}
-                <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
-                    <div class="w-9 h-9 bg-purple-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-desktop text-white text-sm"></i>
-                    </div>
-                    <div class="min-w-0">
-                        <p class="text-xs text-gray-500">متوافق مع</p>
-                        <p class="text-sm font-bold text-gray-800">{{ $post->platform_ar }}</p>
-                    </div>
+
+                {{-- متوافق مع / Platform --}}
+                <div class="bg-gray-100 rounded-xl text-center py-5 px-3 flex flex-col items-center">
+                    <i class="fas fa-expand-arrows-alt text-3xl mb-2" style="color:#4a6b7a;"></i>
+                    <p class="text-xs mb-2" style="color:#4a6b7a;">متوافق مع</p>
+                    <div class="w-10 h-px bg-gray-300 mb-2"></div>
+                    <p class="text-sm font-bold text-gray-800">{{ $post->platform_ar }}</p>
                 </div>
-                {{-- File Size --}}
+
+                {{-- حجم اللعبة / File Size --}}
                 @if($post->file_size)
-                <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
-                    <div class="w-9 h-9 bg-orange-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-hdd text-white text-sm"></i>
-                    </div>
-                    <div class="min-w-0">
-                        <p class="text-xs text-gray-500">حجم الملف</p>
-                        <p class="text-sm font-bold text-gray-800">{{ $post->file_size }}</p>
-                    </div>
+                <div class="bg-gray-100 rounded-xl text-center py-5 px-3 flex flex-col items-center">
+                    <i class="fas fa-download text-3xl mb-2" style="color:#4a6b7a;"></i>
+                    <p class="text-xs mb-2" style="color:#4a6b7a;">حجم اللعبة</p>
+                    <div class="w-10 h-px bg-gray-300 mb-2"></div>
+                    <p class="text-sm font-bold text-gray-800">{{ $post->file_size }}</p>
                 </div>
                 @endif
-                {{-- Category --}}
-                @if($post->category)
-                <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
-                    <div class="w-9 h-9 bg-indigo-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-folder text-white text-sm"></i>
-                    </div>
-                    <div class="min-w-0">
-                        <p class="text-xs text-gray-500">التصنيف</p>
-                        <p class="text-sm font-bold text-gray-800 truncate">{{ $post->category->name }}</p>
-                    </div>
-                </div>
-                @endif
-                {{-- Language --}}
-                @if($post->game_language)
-                <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
-                    <div class="w-9 h-9 bg-teal-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-globe text-white text-sm"></i>
-                    </div>
-                    <div class="min-w-0">
-                        <p class="text-xs text-gray-500">اللغة</p>
-                        <p class="text-sm font-bold text-gray-800">{{ $post->game_language }}</p>
-                    </div>
-                </div>
-                @endif
-                {{-- Last Updated --}}
-                @if($post->updated_date)
-                <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
-                    <div class="w-9 h-9 bg-green-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-calendar-check text-white text-sm"></i>
-                    </div>
-                    <div class="min-w-0">
-                        <p class="text-xs text-gray-500">آخر تحديث</p>
-                        <p class="text-sm font-bold text-gray-800">{{ $post->updated_date->format('Y/m/d') }}</p>
-                    </div>
-                </div>
-                @endif
-                {{-- Version --}}
+
+                {{-- نسخة اللعبة / Version --}}
                 @if($post->version)
-                <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
-                    <div class="w-9 h-9 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-tag text-white text-sm"></i>
-                    </div>
-                    <div class="min-w-0">
-                        <p class="text-xs text-gray-500">الإصدار</p>
-                        <p class="text-sm font-bold text-gray-800">{{ $post->version }}</p>
-                    </div>
+                <div class="bg-gray-100 rounded-xl text-center py-5 px-3 flex flex-col items-center">
+                    <i class="fas fa-code-branch text-3xl mb-2" style="color:#4a6b7a;"></i>
+                    <p class="text-xs mb-2" style="color:#4a6b7a;">نسخة اللعبة</p>
+                    <div class="w-10 h-px bg-gray-300 mb-2"></div>
+                    <p class="text-sm font-bold text-gray-800">{{ $post->version }}</p>
                 </div>
                 @endif
+
+                {{-- تاريخ التحديث / Updated Date --}}
+                @if($post->updated_date)
+                <div class="bg-gray-100 rounded-xl text-center py-5 px-3 flex flex-col items-center">
+                    <i class="fas fa-clock text-3xl mb-2" style="color:#4a6b7a;"></i>
+                    <p class="text-xs mb-2" style="color:#4a6b7a;">تاريخ التحديث</p>
+                    <div class="w-10 h-px bg-gray-300 mb-2"></div>
+                    <p class="text-sm font-bold text-gray-800">{{ $post->updated_date->translatedFormat('j F Y') }}</p>
+                </div>
+                @endif
+
+                {{-- لغة اللعبة / Language --}}
+                @if($post->game_language)
+                <div class="bg-gray-100 rounded-xl text-center py-5 px-3 flex flex-col items-center">
+                    <i class="fas fa-language text-3xl mb-2" style="color:#4a6b7a;"></i>
+                    <p class="text-xs mb-2" style="color:#4a6b7a;">لغة اللعبة</p>
+                    <div class="w-10 h-px bg-gray-300 mb-2"></div>
+                    <p class="text-sm font-bold text-gray-800">{{ $post->game_language }}</p>
+                </div>
+                @endif
+
+                {{-- التصنيف / Category --}}
+                @if($post->category)
+                <div class="bg-gray-100 rounded-xl text-center py-5 px-3 flex flex-col items-center">
+                    <i class="fas fa-folder-open text-3xl mb-2" style="color:#4a6b7a;"></i>
+                    <p class="text-xs mb-2" style="color:#4a6b7a;">التصنيف</p>
+                    <div class="w-10 h-px bg-gray-300 mb-2"></div>
+                    <p class="text-sm font-bold text-gray-800">{{ $post->category->name }}</p>
+                </div>
+                @endif
+
             </div>
         </div>
         @endif

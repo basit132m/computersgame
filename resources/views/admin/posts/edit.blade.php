@@ -20,7 +20,7 @@ tinymce.init({
         'bullist numlist | outdent indent | link image media |',
         'table | code fullscreen | help'
     ].join(' '),
-    content_style: 'body { font-family: Tajawal, Arial, sans-serif; font-size: 16px; direction: rtl; text-align: right; padding: 12px; } h2 { font-size: 1.25rem; font-weight: 700; border-bottom: 2px solid #30A38A; padding-bottom: 4px; margin-top: 1.5rem; } h3 { font-size: 1.1rem; font-weight: 600; margin-top: 1.25rem; }',
+    content_style: 'body { font-family: Almarai, Tahoma, Arial, sans-serif; font-size: 16px; direction: rtl; text-align: right; padding: 12px; } h2 { font-size: 1.25rem; font-weight: 700; border-bottom: 2px solid #30A38A; padding-bottom: 4px; margin-top: 1.5rem; } h3 { font-size: 1.1rem; font-weight: 600; margin-top: 1.25rem; }',
     images_upload_url: '{{ route("admin.media.upload") }}',
     images_upload_handler: (blobInfo, progress) => new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
