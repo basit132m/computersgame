@@ -265,7 +265,7 @@
             @if($post->whats_new)
             <div class="p-5 border-b border-gray-100">
                 <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line">ما الجديد في هذا الإصدار</h2>
-                <div class="text-sm text-gray-700 prose max-w-none">{!! nl2br(e($post->whats_new)) !!}</div>
+                <div class="text-sm text-gray-700 prose max-w-none text-justify">{!! nl2br(e($post->whats_new)) !!}</div>
             </div>
             @endif
 
