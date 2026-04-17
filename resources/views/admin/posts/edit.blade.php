@@ -311,15 +311,13 @@ tinymce.init({
                 <div class="relative mb-3 group">
                     <img src="{{ asset('storage/'.$post->featured_image) }}" alt="{{ $post->title }}"
                         class="w-full aspect-video object-cover rounded-lg" loading="lazy">
-                    <form action="{{ route('admin.posts.image.remove', [$post, 'featured_image']) }}" method="POST"
-                          class="absolute top-1 left-1"
-                          onsubmit="return confirm('حذف الصورة الرئيسية؟')">
-                        @csrf @method('DELETE')
-                        <button type="submit"
+                    <div class="absolute top-1 left-1">
+                        <button type="button"
+                            onclick="deletePostImage('{{ route('admin.posts.image.remove', [$post, 'featured_image']) }}', 'حذف الصورة الرئيسية؟')"
                             class="bg-red-600 hover:bg-red-700 text-white text-xs px-2 py-1 rounded shadow">
                             <i class="fas fa-trash"></i> حذف
                         </button>
-                    </form>
+                    </div>
                 </div>
                 @endif
                 <input type="file" name="featured_image" accept="image/*"
@@ -337,15 +335,13 @@ tinymce.init({
                 <div class="relative mb-3 group">
                     <img src="{{ asset('storage/'.$post->banner_image) }}" alt="banner"
                         class="w-full object-cover rounded-lg" style="max-height:120px;" loading="lazy">
-                    <form action="{{ route('admin.posts.image.remove', [$post, 'banner_image']) }}" method="POST"
-                          class="absolute top-1 left-1"
-                          onsubmit="return confirm('حذف صورة البانر؟')">
-                        @csrf @method('DELETE')
-                        <button type="submit"
+                    <div class="absolute top-1 left-1">
+                        <button type="button"
+                            onclick="deletePostImage('{{ route('admin.posts.image.remove', [$post, 'banner_image']) }}', 'حذف صورة البانر؟')"
                             class="bg-red-600 hover:bg-red-700 text-white text-xs px-2 py-1 rounded shadow">
                             <i class="fas fa-trash"></i> حذف
                         </button>
-                    </form>
+                    </div>
                 </div>
                 @endif
                 <input type="file" name="banner_image" accept="image/*"
@@ -369,15 +365,13 @@ tinymce.init({
                     <div class="relative group">
                         <img src="{{ asset('storage/'.$img) }}"
                             class="w-full aspect-video object-cover rounded" loading="lazy">
-                        <form action="{{ route('admin.posts.gallery.remove', [$post, $i]) }}" method="POST"
-                              class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition bg-black/40 rounded"
-                              onsubmit="return confirm('حذف هذه الصورة؟')">
-                            @csrf @method('DELETE')
-                            <button type="submit"
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition bg-black/40 rounded">
+                            <button type="button"
+                                onclick="deletePostImage('{{ route('admin.posts.gallery.remove', [$post, $i]) }}', 'حذف هذه الصورة؟')"
                                 class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1.5 rounded shadow font-bold">
                                 <i class="fas fa-trash ml-1"></i> حذف
                             </button>
-                        </form>
+                        </div>
                     </div>
                     @endforeach
                 </div>
@@ -385,20 +379,19 @@ tinymce.init({
                 <p class="text-xs text-gray-400 mb-3">لا توجد صور في المعرض — No gallery images yet</p>
                 @endif
 
-                {{-- Add more images — separate form, appends to existing --}}
-                <form action="{{ route('admin.posts.gallery.add', $post) }}" method="POST"
-                      enctype="multipart/form-data" class="border-t pt-3">
-                    @csrf
+                {{-- Add more images — JS fetch, no nested form needed --}}
+                <div class="border-t pt-3">
                     <label class="text-xs font-medium text-gray-600 mb-1 block">
                         إضافة صور جديدة <span class="en-hint">Add more images (appends to existing)</span>
                     </label>
-                    <input type="file" name="images[]" accept="image/*" multiple
+                    <input type="file" id="gallery-add-input" accept="image/*" multiple
                         class="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 mb-2">
-                    <button type="submit"
+                    <button type="button" id="gallery-add-btn"
+                        onclick="addGalleryImages('{{ route('admin.posts.gallery.add', $post) }}')"
                         class="w-full bg-purple-600 hover:bg-purple-700 text-white text-sm font-bold py-2 rounded-lg transition">
                         <i class="fas fa-upload ml-1"></i> رفع الصور — Upload Images
                     </button>
-                </form>
+                </div>
             </div>
 
             {{-- Tags --}}
@@ -426,6 +419,35 @@ tinymce.init({
 
 @push('scripts')
 <script>
+function deletePostImage(url, msg) {
+    if (!confirm(msg)) return;
+    const token = document.querySelector('meta[name=csrf-token]').content;
+    fetch(url, {
+        method: 'DELETE',
+        headers: { 'X-CSRF-TOKEN': token, 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: '_token=' + encodeURIComponent(token),
+    }).then(() => window.location.reload())
+      .catch(() => alert('حدث خطأ'));
+}
+
+function addGalleryImages(url) {
+    const input = document.getElementById('gallery-add-input');
+    if (!input.files.length) { alert('اختر صورة واحدة على الأقل'); return; }
+    const btn = document.getElementById('gallery-add-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="inline-block w-3 h-3 border border-white border-t-transparent rounded-full animate-spin mr-1"></span> جاري الرفع...';
+    const token = document.querySelector('meta[name=csrf-token]').content;
+    const formData = new FormData();
+    formData.append('_token', token);
+    for (const file of input.files) formData.append('images[]', file);
+    fetch(url, { method: 'POST', headers: { 'X-CSRF-TOKEN': token }, body: formData })
+        .then(r => {
+            if (r.ok || r.redirected) { window.location.reload(); }
+            else { alert('حدث خطأ في رفع الصور'); btn.disabled = false; btn.innerHTML = '<i class="fas fa-upload ml-1"></i> رفع الصور — Upload Images'; }
+        })
+        .catch(() => { alert('حدث خطأ في رفع الصور'); btn.disabled = false; btn.innerHTML = '<i class="fas fa-upload ml-1"></i> رفع الصور — Upload Images'; });
+}
+
 function postForm() {
     return {
         loading: {
