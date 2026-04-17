@@ -219,20 +219,45 @@
             @if($post->pros || $post->cons)
             <div class="p-5 border-b border-gray-100">
                 <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line">المميزات والعيوب</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    @if($post->pros)
-                    <div>
-                        <h3 class="font-bold text-green-600 mb-2 flex items-center gap-1 text-sm"><i class="fas fa-thumbs-up"></i> المميزات</h3>
-                        <div class="text-sm text-gray-700 space-y-1">{!! nl2br(e($post->pros)) !!}</div>
-                    </div>
-                    @endif
-                    @if($post->cons)
-                    <div>
-                        <h3 class="font-bold text-red-500 mb-2 flex items-center gap-1 text-sm"><i class="fas fa-thumbs-down"></i> العيوب</h3>
-                        <div class="text-sm text-gray-700 space-y-1">{!! nl2br(e($post->cons)) !!}</div>
-                    </div>
-                    @endif
-                </div>
+                <table class="w-full border-collapse text-sm text-center">
+                    <thead>
+                        <tr>
+                            @if($post->pros)
+                            <th class="py-2 px-4 font-bold text-white rounded-tr-lg" style="background:#33A18D; width:50%;">
+                                <i class="fas fa-thumbs-up ml-1"></i> المميزات
+                            </th>
+                            @endif
+                            @if($post->cons)
+                            <th class="py-2 px-4 font-bold text-white rounded-tl-lg" style="background:#e05252; width:50%;">
+                                <i class="fas fa-thumbs-down ml-1"></i> العيوب
+                            </th>
+                            @endif
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            $proLines  = $post->pros ? array_filter(explode("\n", trim($post->pros)))  : [];
+                            $conLines  = $post->cons ? array_filter(explode("\n", trim($post->cons)))  : [];
+                            $maxRows   = max(count($proLines), count($conLines));
+                            $proLines  = array_values($proLines);
+                            $conLines  = array_values($conLines);
+                        @endphp
+                        @for($i = 0; $i < $maxRows; $i++)
+                        <tr class="{{ $i % 2 === 0 ? 'bg-white' : 'bg-gray-50' }}">
+                            @if($post->pros)
+                            <td class="py-2 px-4 border border-gray-200 text-gray-700">
+                                {{ $proLines[$i] ?? '' }}
+                            </td>
+                            @endif
+                            @if($post->cons)
+                            <td class="py-2 px-4 border border-gray-200 text-gray-700">
+                                {{ $conLines[$i] ?? '' }}
+                            </td>
+                            @endif
+                        </tr>
+                        @endfor
+                    </tbody>
+                </table>
             </div>
             @endif
 
