@@ -50,7 +50,7 @@ class PostController extends Controller
         if ($request->hasFile('featured_image')) {
             $validated['featured_image'] = ImageService::uploadWebP(
                 $request->file('featured_image'),
-                'posts', 250, 200
+                'posts', 250, 250
             );
         }
 
@@ -126,7 +126,7 @@ class PostController extends Controller
             }
             $validated['featured_image'] = ImageService::uploadWebP(
                 $request->file('featured_image'),
-                'posts', 250, 200
+                'posts', 250, 250
             );
         }
 

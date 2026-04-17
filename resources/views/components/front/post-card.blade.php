@@ -1,8 +1,22 @@
 @props(['post', 'variant' => 'grid'])
 
 @if($variant === 'list')
-{{-- Horizontal list card matching reference design --}}
+{{-- Horizontal list card — image on right, content on left --}}
 <article class="flex gap-4 py-4 border-b border-gray-200 last:border-0 group">
+    {{-- Image — right side (first in DOM = right in RTL) --}}
+    <a href="{{ url($post->slug) }}" class="flex-shrink-0">
+        @if($post->featured_image)
+        <img src="{{ \App\Services\ImageService::getThumbUrl($post->featured_image) }}"
+             alt="{{ $post->title }}"
+             class="w-[250px] h-[250px] object-cover rounded group-hover:opacity-90 transition"
+             loading="lazy" width="250" height="250">
+        @else
+        <div class="w-[250px] h-[250px] bg-gradient-to-br from-gray-100 to-gray-200 rounded flex items-center justify-center">
+            <i class="fas fa-gamepad text-gray-400 text-4xl"></i>
+        </div>
+        @endif
+    </a>
+    {{-- Content --}}
     <div class="flex-1 min-w-0">
         <a href="{{ url($post->slug) }}">
             <h3 class="font-bold text-gray-900 text-base leading-snug hover:text-[#30A38A] transition mb-2 line-clamp-2">
@@ -10,23 +24,9 @@
             </h3>
         </a>
         @if($post->excerpt)
-        <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">{{ strip_tags($post->excerpt) }}</p>
+        <p class="text-sm text-gray-500 line-clamp-3 leading-relaxed">{{ strip_tags($post->excerpt) }}</p>
         @endif
     </div>
-    @if($post->featured_image)
-    <a href="{{ url($post->slug) }}" class="flex-shrink-0">
-        <img src="{{ \App\Services\ImageService::getThumbUrl($post->featured_image) }}"
-             alt="{{ $post->title }}"
-             class="w-32 h-24 object-cover rounded group-hover:opacity-90 transition"
-             loading="lazy" width="128" height="96">
-    </a>
-    @else
-    <a href="{{ url($post->slug) }}" class="flex-shrink-0">
-        <div class="w-32 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded flex items-center justify-center">
-            <i class="fas fa-gamepad text-gray-400 text-2xl"></i>
-        </div>
-    </a>
-    @endif
 </article>
 @else
 {{-- Grid card (used in category / search pages) --}}
