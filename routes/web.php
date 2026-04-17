@@ -41,6 +41,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.auth'])->grou
     // Posts
     Route::resource('posts', AdminPostController::class);
     Route::post('posts/{post}/publish', [AdminPostController::class, 'publish'])->name('posts.publish');
+    Route::post('posts/{post}/gallery', [AdminPostController::class, 'addGalleryImages'])->name('posts.gallery.add');
+    Route::delete('posts/{post}/gallery/{index}', [AdminPostController::class, 'removeGalleryImage'])->name('posts.gallery.remove');
+    Route::delete('posts/{post}/image/{field}', [AdminPostController::class, 'removeImage'])->name('posts.image.remove');
 
     // Categories
     Route::resource('categories', AdminCategoryController::class);

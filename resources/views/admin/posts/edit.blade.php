@@ -308,12 +308,23 @@ tinymce.init({
             <div class="bg-white rounded-xl p-5 shadow-sm">
                 <label class="block font-medium text-gray-700 mb-3">الصورة الرئيسية <span class="en-hint">Featured Image (thumbnail)</span></label>
                 @if($post->featured_image)
-                <img src="{{ asset('storage/'.$post->featured_image) }}" alt="{{ $post->title }}"
-                    class="w-full aspect-video object-cover rounded-lg mb-3" loading="lazy">
+                <div class="relative mb-3 group">
+                    <img src="{{ asset('storage/'.$post->featured_image) }}" alt="{{ $post->title }}"
+                        class="w-full aspect-video object-cover rounded-lg" loading="lazy">
+                    <form action="{{ route('admin.posts.image.remove', [$post, 'featured_image']) }}" method="POST"
+                          class="absolute top-1 left-1"
+                          onsubmit="return confirm('حذف الصورة الرئيسية؟')">
+                        @csrf @method('DELETE')
+                        <button type="submit"
+                            class="bg-red-600 hover:bg-red-700 text-white text-xs px-2 py-1 rounded shadow">
+                            <i class="fas fa-trash"></i> حذف
+                        </button>
+                    </form>
+                </div>
                 @endif
                 <input type="file" name="featured_image" accept="image/*"
                     class="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                <p class="text-xs text-gray-400 mt-1">Auto-converted to WebP 800×450</p>
+                <p class="text-xs text-gray-400 mt-1">{{ $post->featured_image ? 'رفع صورة جديدة يستبدل الحالية — Upload to replace' : 'Auto-converted to WebP 800×450' }}</p>
             </div>
 
             {{-- Banner Image --}}
@@ -323,33 +334,71 @@ tinymce.init({
                     صورة البانر <span class="en-hint">Banner Image — top of article</span>
                 </label>
                 @if($post->banner_image)
-                <img src="{{ asset('storage/'.$post->banner_image) }}" alt="banner"
-                    class="w-full object-cover rounded-lg mb-3" style="max-height:120px;" loading="lazy">
+                <div class="relative mb-3 group">
+                    <img src="{{ asset('storage/'.$post->banner_image) }}" alt="banner"
+                        class="w-full object-cover rounded-lg" style="max-height:120px;" loading="lazy">
+                    <form action="{{ route('admin.posts.image.remove', [$post, 'banner_image']) }}" method="POST"
+                          class="absolute top-1 left-1"
+                          onsubmit="return confirm('حذف صورة البانر؟')">
+                        @csrf @method('DELETE')
+                        <button type="submit"
+                            class="bg-red-600 hover:bg-red-700 text-white text-xs px-2 py-1 rounded shadow">
+                            <i class="fas fa-trash"></i> حذف
+                        </button>
+                    </form>
+                </div>
                 @endif
                 <input type="file" name="banner_image" accept="image/*"
                     class="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
+                <p class="text-xs text-gray-400 mt-1">{{ $post->banner_image ? 'رفع صورة جديدة يستبدل الحالية — Upload to replace' : 'Displayed full-width at top of article' }}</p>
             </div>
 
             {{-- Gallery Images --}}
             <div class="bg-white rounded-xl p-5 shadow-sm">
-                <label class="block font-medium text-gray-700 mb-3">
-                    <i class="fas fa-images text-purple-500 ml-1"></i>
-                    صور المعرض <span class="en-hint">Gallery / Screenshots</span>
-                </label>
+                <div class="flex items-center justify-between mb-3">
+                    <label class="font-medium text-gray-700">
+                        <i class="fas fa-images text-purple-500 ml-1"></i>
+                        صور المعرض <span class="en-hint">Gallery / Screenshots</span>
+                    </label>
+                </div>
+
+                {{-- Existing gallery images with individual delete --}}
                 @if($post->gallery_images && count($post->gallery_images))
                 <div class="grid grid-cols-3 gap-2 mb-3">
-                    @foreach($post->gallery_images as $img)
-                    <img src="{{ asset('storage/'.$img) }}" class="w-full aspect-video object-cover rounded" loading="lazy">
+                    @foreach($post->gallery_images as $i => $img)
+                    <div class="relative group">
+                        <img src="{{ asset('storage/'.$img) }}"
+                            class="w-full aspect-video object-cover rounded" loading="lazy">
+                        <form action="{{ route('admin.posts.gallery.remove', [$post, $i]) }}" method="POST"
+                              class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition bg-black/40 rounded"
+                              onsubmit="return confirm('حذف هذه الصورة؟')">
+                            @csrf @method('DELETE')
+                            <button type="submit"
+                                class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1.5 rounded shadow font-bold">
+                                <i class="fas fa-trash ml-1"></i> حذف
+                            </button>
+                        </form>
+                    </div>
                     @endforeach
                 </div>
-                <label class="flex items-center gap-2 text-sm text-red-600 mb-2 cursor-pointer">
-                    <input type="checkbox" name="clear_gallery" value="1" class="rounded">
-                    حذف جميع الصور الحالية — Clear current gallery
-                </label>
+                @else
+                <p class="text-xs text-gray-400 mb-3">لا توجد صور في المعرض — No gallery images yet</p>
                 @endif
-                <input type="file" name="gallery_images[]" accept="image/*" multiple
-                    class="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
-                <p class="text-xs text-gray-400 mt-1">رفع صور جديدة يستبدل الصور الحالية — Uploading new images replaces current gallery</p>
+
+                {{-- Add more images — separate form, appends to existing --}}
+                <form action="{{ route('admin.posts.gallery.add', $post) }}" method="POST"
+                      enctype="multipart/form-data" class="border-t pt-3">
+                    @csrf
+                    <label class="text-xs font-medium text-gray-600 mb-1 block">
+                        إضافة صور جديدة <span class="en-hint">Add more images (appends to existing)</span>
+                    </label>
+                    <input type="file" name="images[]" accept="image/*" multiple
+                        class="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 mb-2">
+                    <button type="submit"
+                        class="w-full bg-purple-600 hover:bg-purple-700 text-white text-sm font-bold py-2 rounded-lg transition">
+                        <i class="fas fa-upload ml-1"></i> رفع الصور — Upload Images
+                    </button>
+                </form>
             </div>
 
             {{-- Tags --}}

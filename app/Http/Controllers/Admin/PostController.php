@@ -199,6 +199,47 @@ class PostController extends Controller
         return back()->with('success', 'تم نشر المقال');
     }
 
+    public function addGalleryImages(Request $request, Post $post)
+    {
+        $request->validate(['images' => 'required|array', 'images.*' => 'image|max:5120']);
+
+        $gallery = $post->gallery_images ?? [];
+        foreach ($request->file('images') as $img) {
+            $gallery[] = ImageService::uploadWebP($img, 'gallery');
+        }
+        $post->update(['gallery_images' => $gallery]);
+        Cache::flush();
+
+        return back()->with('success', 'تم إضافة الصور بنجاح');
+    }
+
+    public function removeGalleryImage(Post $post, int $index)
+    {
+        $gallery = $post->gallery_images ?? [];
+        if (isset($gallery[$index])) {
+            ImageService::delete($gallery[$index]);
+            array_splice($gallery, $index, 1);
+            $post->update(['gallery_images' => array_values($gallery) ?: null]);
+            Cache::flush();
+        }
+
+        return back()->with('success', 'تم حذف الصورة');
+    }
+
+    public function removeImage(Post $post, string $field)
+    {
+        if (! in_array($field, ['featured_image', 'banner_image'])) {
+            abort(404);
+        }
+        if ($post->$field) {
+            ImageService::delete($post->$field);
+            $post->update([$field => null]);
+            Cache::flush();
+        }
+
+        return back()->with('success', 'تم حذف الصورة');
+    }
+
     private function validatePost(Request $request): array
     {
         return $request->validate([
