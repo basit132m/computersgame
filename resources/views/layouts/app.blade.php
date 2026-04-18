@@ -100,7 +100,7 @@
 {{-- ═══════════════════════════════════════════
      HEADER
 ═══════════════════════════════════════════ --}}
-<header class="sticky top-0 z-50 shadow-md">
+<header class="shadow-md">
 
     {{-- Row 1: Black bar — Search | Logo | Social --}}
     <div class="bg-black">
