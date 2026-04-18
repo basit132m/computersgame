@@ -81,18 +81,29 @@
                     <td class="px-4 py-3">
                         <div class="flex gap-1">
                             @if($comment->status !== 'approved')
-                            <button wire:click="approve({{ $comment->id }})"
-                                class="text-green-600 hover:text-green-800 text-xs px-2 py-1 rounded hover:bg-green-50 transition flex items-center gap-1">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                                موافقة
-                            </button>
+                            <form method="POST" action="{{ route('admin.comments.approve', $comment->id) }}">
+                                @csrf
+                                <button type="submit"
+                                    class="text-green-600 hover:text-green-800 text-xs px-2 py-1 rounded hover:bg-green-50 transition flex items-center gap-1">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                    موافقة
+                                </button>
+                            </form>
                             @endif
                             @if($comment->status !== 'rejected')
-                            <button wire:click="reject({{ $comment->id }})"
-                                class="text-yellow-600 hover:text-yellow-800 text-xs px-2 py-1 rounded hover:bg-yellow-50 transition">رفض</button>
+                            <form method="POST" action="{{ route('admin.comments.reject', $comment->id) }}">
+                                @csrf
+                                <button type="submit"
+                                    class="text-yellow-600 hover:text-yellow-800 text-xs px-2 py-1 rounded hover:bg-yellow-50 transition">رفض</button>
+                            </form>
                             @endif
-                            <button wire:click="removeComment({{ $comment->id }})" wire:confirm="حذف هذا التعليق؟"
-                                class="text-red-500 hover:text-red-700 text-xs px-2 py-1 rounded hover:bg-red-50 transition">حذف</button>
+                            <form method="POST" action="{{ route('admin.comments.destroy', $comment->id) }}"
+                                  onsubmit="return confirm('حذف هذا التعليق؟')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                    class="text-red-500 hover:text-red-700 text-xs px-2 py-1 rounded hover:bg-red-50 transition">حذف</button>
+                            </form>
                         </div>
                     </td>
                 </tr>
