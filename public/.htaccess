@@ -61,7 +61,18 @@
     ExpiresByType application/x-javascript "access plus 1 month"
     ExpiresByType text/javascript "access plus 1 month"
     ExpiresByType image/x-icon "access plus 1 year"
+    # HTML pages must never be cached by the browser — always fetch fresh
+    ExpiresByType text/html "access plus 0 seconds"
     ExpiresDefault "access plus 1 week"
+</IfModule>
+
+# Prevent browser from caching HTML responses
+<IfModule mod_headers.c>
+    <FilesMatch "\.php$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires "0"
+    </FilesMatch>
 </IfModule>
 
 # Deny access to sensitive files
