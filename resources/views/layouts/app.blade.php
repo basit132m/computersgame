@@ -326,22 +326,24 @@
 </footer>
 
 {{-- Scroll to Top Button --}}
-<div x-data="{ show: false }" @scroll.window="show = window.scrollY > 300">
-    <button
-        x-show="show"
-        x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="opacity-0 translate-y-4"
-        x-transition:enter-end="opacity-100 translate-y-0"
-        x-transition:leave="transition ease-in duration-200"
-        x-transition:leave-start="opacity-100 translate-y-0"
-        x-transition:leave-end="opacity-0 translate-y-4"
-        @click="window.scrollTo({ top: 0, behavior: 'smooth' })"
-        class="fixed bottom-6 left-6 z-50 w-11 h-11 rounded-full bg-[#30A38A] hover:bg-[#268a74] text-white shadow-lg flex items-center justify-center transition-colors"
-        aria-label="العودة للأعلى"
-        title="العودة للأعلى">
-        <i class="fas fa-arrow-up text-sm"></i>
-    </button>
-</div>
+<button id="scrollTopBtn"
+    onclick="window.scrollTo({top:0,behavior:'smooth'})"
+    style="display:none;"
+    class="fixed bottom-6 left-6 z-50 w-11 h-11 rounded-full bg-[#30A38A] hover:bg-[#268a74] text-white shadow-lg flex items-center justify-center transition-all duration-300"
+    aria-label="العودة للأعلى"
+    title="العودة للأعلى">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
+    </svg>
+</button>
+<script>
+(function(){
+    var btn = document.getElementById('scrollTopBtn');
+    window.addEventListener('scroll', function(){
+        btn.style.display = window.scrollY > 300 ? 'flex' : 'none';
+    }, { passive: true });
+})();
+</script>
 
 @yield('scripts')
 @stack('scripts')
