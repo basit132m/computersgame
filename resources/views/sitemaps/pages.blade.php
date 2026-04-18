@@ -7,12 +7,6 @@
         <priority>1.0</priority>
     </url>
     <url>
-        <loc>{{ url('/search') }}</loc>
-        <lastmod>{{ now()->toAtomString() }}</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
         <loc>{{ url('/about') }}</loc>
         <lastmod>{{ now()->toAtomString() }}</lastmod>
         <changefreq>monthly</changefreq>

@@ -9,10 +9,7 @@ Disallow: /vendor/
 Disallow: /node_modules/
 
 # Sitemaps
-Sitemap: https://computersgame.org/sitemap-index.xml
-
-# Crawl delay for bots
-Crawl-delay: 1
+Sitemap: https://computersgame.org/sitemap.xml
 
 # Allow specific bots full access
 User-agent: Googlebot

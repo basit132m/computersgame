@@ -41,6 +41,36 @@
     ]
 }
 </script>
+@if($post->pros || $post->cons)
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        @if($post->pros)
+        {
+            "@type": "Question",
+            "name": "ما هي مميزات {{ addslashes($post->title) }}؟",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "{{ addslashes(strip_tags(str_replace("\n", ' ', $post->pros))) }}"
+            }
+        }@if($post->cons),@endif
+        @endif
+        @if($post->cons)
+        {
+            "@type": "Question",
+            "name": "ما هي عيوب {{ addslashes($post->title) }}؟",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "{{ addslashes(strip_tags(str_replace("\n", ' ', $post->cons))) }}"
+            }
+        }
+        @endif
+    ]
+}
+</script>
+@endif
 @endsection
 
 @php

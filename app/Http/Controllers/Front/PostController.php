@@ -71,6 +71,9 @@ class PostController extends Controller
 
         $image = $post->og_image ?? $post->banner_image ?? $post->featured_image;
 
+        $orgName = 'ألعاب الكمبيوتر';
+        $downloadUrl = $post->downloadLinks->first()?->url;
+
         return match ($post->schema_type) {
             'SoftwareApplication' => array_merge($base, array_filter([
                 '@type'               => 'SoftwareApplication',
@@ -80,8 +83,13 @@ class PostController extends Controller
                 'fileSize'            => $post->file_size,
                 'description'         => $post->excerpt ? strip_tags($post->excerpt) : null,
                 'image'               => $image ? asset('storage/' . $image) : null,
-                'downloadUrl'         => $post->downloadLinks->first()?->url,
-                'offers'              => ['@type' => 'Offer', 'price' => '0', 'priceCurrency' => 'SAR'],
+                'datePublished'       => $post->published_at?->toIso8601String(),
+                'dateModified'        => $post->updated_at?->toIso8601String(),
+                'author'              => ['@type' => 'Organization', 'name' => $post->developer ?: $orgName],
+                'publisher'           => ['@type' => 'Organization', 'name' => $orgName],
+                'downloadUrl'         => $downloadUrl,
+                'potentialAction'     => $downloadUrl ? ['@type' => 'DownloadAction', 'target' => $downloadUrl] : null,
+                'offers'              => ['@type' => 'Offer', 'price' => '0', 'priceCurrency' => 'SAR', 'availability' => 'https://schema.org/InStock'],
             ])),
             'Article' => array_merge($base, array_filter([
                 '@type'         => 'Article',
@@ -90,8 +98,8 @@ class PostController extends Controller
                 'image'         => $image ? asset('storage/' . $image) : null,
                 'datePublished' => $post->published_at?->toIso8601String(),
                 'dateModified'  => $post->updated_at?->toIso8601String(),
-                'author'        => ['@type' => 'Organization', 'name' => 'ألعاب الكمبيوتر'],
-                'publisher'     => ['@type' => 'Organization', 'name' => 'ألعاب الكمبيوتر'],
+                'author'        => ['@type' => 'Organization', 'name' => $orgName],
+                'publisher'     => ['@type' => 'Organization', 'name' => $orgName],
             ])),
             default => $base,
         };

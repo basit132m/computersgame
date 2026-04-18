@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>@yield('title', $globalSettings['site_name'] ?? 'ألعاب الكمبيوتر') | {{ $globalSettings['site_name'] ?? 'ألعاب الكمبيوتر' }}</title>
+    <title>@yield('title', $globalSettings['site_name'] ?? 'ألعاب الكمبيوتر')</title>
     <meta name="description" content="@yield('meta_description', $globalSettings['site_description'] ?? '')">
     @hasSection('meta_keywords')
     <meta name="keywords" content="@yield('meta_keywords')">
@@ -21,11 +21,17 @@
     <meta property="og:locale" content="ar_AR">
     @hasSection('og_image')
     <meta property="og:image" content="@yield('og_image')">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/jpeg">
     <meta name="twitter:image" content="@yield('og_image')">
     @elseif(!empty($globalSettings['logo']))
     <meta property="og:image" content="{{ asset('storage/'.$globalSettings['logo']) }}">
+    <meta property="og:image:width" content="600">
+    <meta property="og:image:height" content="600">
     <meta name="twitter:image" content="{{ asset('storage/'.$globalSettings['logo']) }}">
     @endif
+    <meta name="theme-color" content="#30A38A">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="@yield('og_title', $globalSettings['site_name'] ?? '')">

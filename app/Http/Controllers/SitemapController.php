@@ -21,7 +21,7 @@ class SitemapController extends Controller
     public function posts(): Response
     {
         $posts = Post::published()
-            ->select('slug', 'updated_at', 'published_at')
+            ->select('slug', 'updated_at', 'published_at', 'type', 'views', 'featured_image', 'title')
             ->orderByDesc('updated_at')
             ->get();
 

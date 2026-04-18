@@ -6,7 +6,7 @@
         <loc>{{ url($post->slug) }}</loc>
         <lastmod>{{ $post->updated_at->toAtomString() }}</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>{{ $post->type === 'blog' ? '0.6' : '0.8' }}</priority>
+        <priority>@if($post->views > 1000)0.9@elseif($post->views > 100)0.8@elseif($post->type === 'blog')0.5@else0.7@endif</priority>
         @if($post->featured_image)
         <image:image>
             <image:loc>{{ asset('storage/' . $post->featured_image) }}</image:loc>

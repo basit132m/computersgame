@@ -30,6 +30,11 @@
     RewriteCond %{HTTP_REFERER} !^https?://(www\.)?computersgame\.org [NC]
     RewriteCond %{HTTP_REFERER} !^https?://(www\.)?google\. [NC]
     RewriteCond %{HTTP_REFERER} !^https?://(www\.)?bing\. [NC]
+    RewriteCond %{HTTP_REFERER} !^https?://(www\.)?facebook\. [NC]
+    RewriteCond %{HTTP_REFERER} !^https?://(www\.)?twitter\. [NC]
+    RewriteCond %{HTTP_REFERER} !^https?://(www\.)?pinterest\. [NC]
+    RewriteCond %{HTTP_REFERER} !^https?://(www\.)?linkedin\. [NC]
+    RewriteCond %{HTTP_REFERER} !^https?://(www\.)?telegram\. [NC]
     RewriteRule \.(jpg|jpeg|png|gif|webp|svg)$ - [F,NC,L]
 </IfModule>
 
@@ -40,6 +45,7 @@
     Header always set X-XSS-Protection "1; mode=block"
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
     Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
 </IfModule>
 
 # Compression
