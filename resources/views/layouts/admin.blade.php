@@ -6,6 +6,7 @@
     <meta name="robots" content="noindex, nofollow">
     <title>@yield('title', 'لوحة التحكم') | لوحة تحكم ألعاب الكمبيوتر</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
