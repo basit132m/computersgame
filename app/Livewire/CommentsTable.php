@@ -19,6 +19,7 @@ class CommentsTable extends Component
 
     public array $selected = [];
     public bool $selectAll = false;
+    public string $toast = '';
 
     public function updatedSearch(): void  { $this->resetPage(); $this->selected = []; }
     public function updatedStatus(): void  { $this->resetPage(); $this->selected = []; }
@@ -26,41 +27,46 @@ class CommentsTable extends Component
     public function approve(int $id): void
     {
         Comment::findOrFail($id)->update(['status' => 'approved']);
-        session()->flash('success', 'تمت الموافقة على التعليق');
+        $this->toast = 'تمت الموافقة على التعليق ✓';
     }
 
     public function reject(int $id): void
     {
         Comment::findOrFail($id)->update(['status' => 'rejected']);
-        session()->flash('success', 'تم رفض التعليق');
+        $this->toast = 'تم رفض التعليق ✓';
     }
 
-    public function delete(int $id): void
+    public function removeComment(int $id): void
     {
         Comment::findOrFail($id)->delete();
         $this->selected = array_filter($this->selected, fn($s) => $s !== $id);
-        session()->flash('success', 'تم حذف التعليق');
+        $this->toast = 'تم حذف التعليق ✓';
     }
 
     public function bulkApprove(): void
     {
         Comment::whereIn('id', $this->selected)->update(['status' => 'approved']);
         $this->selected = [];
-        session()->flash('success', 'تمت الموافقة على التعليقات المحددة');
+        $this->toast = 'تمت الموافقة على ' . count($this->selected) . ' تعليقات ✓';
     }
 
     public function bulkReject(): void
     {
         Comment::whereIn('id', $this->selected)->update(['status' => 'rejected']);
         $this->selected = [];
-        session()->flash('success', 'تم رفض التعليقات المحددة');
+        $this->toast = 'تم رفض التعليقات المحددة ✓';
     }
 
     public function bulkDelete(): void
     {
         Comment::whereIn('id', $this->selected)->delete();
         $this->selected = [];
-        session()->flash('success', 'تم حذف التعليقات المحددة');
+        $this->toast = 'تم حذف التعليقات المحددة ✓';
+    }
+
+    public function clearToast(): void
+    {
+        $this->toast = '';
     }
 
     public function render()

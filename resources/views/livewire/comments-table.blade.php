@@ -1,4 +1,13 @@
 <div>
+    {{-- Toast --}}
+    @if($toast)
+    <div class="mb-4 px-4 py-3 bg-green-50 border border-green-300 text-green-800 rounded-lg flex items-center justify-between text-sm font-medium"
+         wire:poll.2s="clearToast">
+        <span>{{ $toast }}</span>
+        <button wire:click="clearToast" class="text-green-600 hover:text-green-800 text-lg leading-none">&times;</button>
+    </div>
+    @endif
+
     {{-- Filters --}}
     <div class="bg-white rounded-xl p-4 mb-4 flex flex-wrap gap-3 shadow-sm items-center">
         <div class="flex items-center gap-2 flex-1 min-w-48 border rounded-lg px-3 py-2">
@@ -82,7 +91,7 @@
                             <button wire:click="reject({{ $comment->id }})"
                                 class="text-yellow-600 hover:text-yellow-800 text-xs px-2 py-1 rounded hover:bg-yellow-50 transition">رفض</button>
                             @endif
-                            <button wire:click="delete({{ $comment->id }})" wire:confirm="حذف هذا التعليق؟"
+                            <button wire:click="removeComment({{ $comment->id }})" wire:confirm="حذف هذا التعليق؟"
                                 class="text-red-500 hover:text-red-700 text-xs px-2 py-1 rounded hover:bg-red-50 transition">حذف</button>
                         </div>
                     </td>
