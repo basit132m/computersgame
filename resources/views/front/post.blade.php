@@ -117,20 +117,28 @@
                         </div>
                     </div>
                     @if($post->developer)
+                    @if($post->developer_url)
+                    <a href="{{ $post->developer_url }}" target="_blank" rel="noopener noreferrer" class="bg-gray-100 rounded-xl text-center py-4 px-2 flex flex-col items-center justify-between hover:bg-gray-200 transition">
+                    @else
                     <div class="bg-gray-100 rounded-xl text-center py-4 px-2 flex flex-col items-center justify-between">
+                    @endif
                         <i class="fas fa-building text-2xl mb-1" style="color:#4a6b7a;"></i>
                         <p class="text-xs mb-1" style="color:#4a6b7a;">الشركة المنتجة</p>
                         <div class="w-8 h-px bg-gray-300 mb-1"></div>
                         <p class="text-sm font-bold text-gray-800">{{ $post->developer }}</p>
-                    </div>
+                    @if($post->developer_url)</a>@else</div>@endif
                     @endif
                     @if($post->publisher)
+                    @if($post->publisher_url)
+                    <a href="{{ $post->publisher_url }}" target="_blank" rel="noopener noreferrer" class="bg-gray-100 rounded-xl text-center py-4 px-2 flex flex-col items-center justify-between hover:bg-gray-200 transition">
+                    @else
                     <div class="bg-gray-100 rounded-xl text-center py-4 px-2 flex flex-col items-center justify-between">
+                    @endif
                         <i class="fas fa-briefcase text-2xl mb-1" style="color:#4a6b7a;"></i>
                         <p class="text-xs mb-1" style="color:#4a6b7a;">الناشر</p>
                         <div class="w-8 h-px bg-gray-300 mb-1"></div>
                         <p class="text-sm font-bold text-gray-800">{{ $post->publisher }}</p>
-                    </div>
+                    @if($post->publisher_url)</a>@else</div>@endif
                     @endif
                     @if($post->published_at)
                     <div class="bg-gray-100 rounded-xl text-center py-4 px-2 flex flex-col items-center justify-between">
@@ -179,12 +187,13 @@
                     </div>
                     @endif
                     @if($post->category)
-                    <div class="bg-gray-100 rounded-xl text-center py-4 px-2 flex flex-col items-center justify-between">
+                    @php $catHref = $post->category_url ?: route('category.show', $post->category->slug); @endphp
+                    <a href="{{ $catHref }}" target="_blank" rel="noopener noreferrer" class="bg-gray-100 rounded-xl text-center py-4 px-2 flex flex-col items-center justify-between hover:bg-gray-200 transition">
                         <i class="fas fa-folder-open text-2xl mb-1" style="color:#4a6b7a;"></i>
                         <p class="text-xs mb-1" style="color:#4a6b7a;">التصنيف</p>
                         <div class="w-8 h-px bg-gray-300 mb-1"></div>
                         <p class="text-sm font-bold text-gray-800">{{ $post->category->name }}</p>
-                    </div>
+                    </a>
                     @endif
                 </div>
             </div>

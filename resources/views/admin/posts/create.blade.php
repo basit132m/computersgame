@@ -120,9 +120,19 @@ tinymce.init({
                             class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div>
+                        <label class="text-sm font-medium text-gray-600 mb-1 block">رابط المطور <span class="en-hint">Developer URL</span></label>
+                        <input type="url" name="developer_url" value="{{ old('developer_url') }}"
+                            class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://...">
+                    </div>
+                    <div>
                         <label class="text-sm font-medium text-gray-600 mb-1 block">الناشر <span class="en-hint">Publisher</span></label>
                         <input type="text" name="publisher" value="{{ old('publisher') }}"
                             class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-600 mb-1 block">رابط الناشر <span class="en-hint">Publisher URL</span></label>
+                        <input type="url" name="publisher_url" value="{{ old('publisher_url') }}"
+                            class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://...">
                     </div>
                     <div>
                         <label class="text-sm font-medium text-gray-600 mb-1 block">حجم الملف <span class="en-hint">File Size</span></label>
@@ -406,7 +416,7 @@ tinymce.init({
                 <label class="block font-medium text-gray-700 mb-3">
                     التصنيف <span class="en-hint">Category</span>
                 </label>
-                <select name="category_id" class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select name="category_id" class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3">
                     <option value="">-- اختر تصنيفاً — Select category --</option>
                     @foreach($categories as $cat)
                     <option value="{{ $cat->id }}" {{ old('category_id') == $cat->id ? 'selected' : '' }}>
@@ -414,6 +424,9 @@ tinymce.init({
                     </option>
                     @endforeach
                 </select>
+                <label class="text-sm font-medium text-gray-600 mb-1 block">رابط التصنيف <span class="en-hint">Category URL</span></label>
+                <input type="url" name="category_url" value="{{ old('category_url') }}"
+                    class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://...">
             </div>
 
             {{-- Featured Image --}}
