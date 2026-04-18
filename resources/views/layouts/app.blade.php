@@ -162,14 +162,74 @@
          x-transition:leave-start="opacity-100 translate-y-0"
          x-transition:leave-end="opacity-0 -translate-y-3"
          class="bg-gray-900 border-b border-gray-700 py-3 px-4">
-        <form action="{{ route('search') }}" method="GET" class="max-w-2xl mx-auto flex gap-2">
-            <button type="submit" class="bg-[#30A38A] hover:bg-[#268a74] text-white px-5 py-2 rounded-lg text-sm font-bold transition flex-shrink-0">
-                <i class="fas fa-search ml-1"></i> بحث
-            </button>
-            <input type="text" name="q" value="{{ request('q') }}"
-                   placeholder="ابحث عن لعبة أو برنامج أو تطبيق..." autofocus
-                   class="flex-1 px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-600 focus:outline-none focus:border-[#30A38A] text-sm text-right">
-        </form>
+        <div class="max-w-2xl mx-auto"
+             x-data="{
+                q: '{{ request('q') }}',
+                results: [],
+                loading: false,
+                open: false,
+                timer: null,
+                fetch() {
+                    clearTimeout(this.timer);
+                    if (this.q.length < 2) { this.results = []; this.open = false; return; }
+                    this.loading = true;
+                    this.timer = setTimeout(() => {
+                        fetch('{{ route('search.autocomplete') }}?q=' + encodeURIComponent(this.q))
+                            .then(r => r.json())
+                            .then(data => { this.results = data; this.open = data.length > 0; this.loading = false; })
+                            .catch(() => { this.loading = false; });
+                    }, 250);
+                }
+             }"
+             @click.outside="open = false">
+            <form action="{{ route('search') }}" method="GET" class="flex gap-2">
+                <button type="submit" class="bg-[#30A38A] hover:bg-[#268a74] text-white px-5 py-2 rounded-lg text-sm font-bold transition flex-shrink-0">
+                    <i class="fas fa-search ml-1"></i> بحث
+                </button>
+                <div class="relative flex-1">
+                    <input type="text" name="q"
+                           x-model="q"
+                           @input="fetch()"
+                           @focus="q.length >= 2 && results.length && (open = true)"
+                           @keydown.escape="open = false"
+                           placeholder="ابحث عن لعبة أو برنامج أو تطبيق..." autofocus
+                           autocomplete="off"
+                           class="w-full px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-600 focus:outline-none focus:border-[#30A38A] text-sm text-right">
+                    {{-- Spinner --}}
+                    <span x-show="loading" class="absolute left-3 top-1/2 -translate-y-1/2">
+                        <svg class="w-4 h-4 animate-spin text-[#30A38A]" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                        </svg>
+                    </span>
+                    {{-- Dropdown --}}
+                    <div x-show="open" x-cloak
+                         class="absolute top-full right-0 left-0 mt-1 bg-white rounded-lg shadow-xl border border-gray-200 z-50 overflow-hidden max-h-80 overflow-y-auto">
+                        <template x-for="item in results" :key="item.url">
+                            <a :href="item.url"
+                               class="flex items-center gap-3 px-3 py-2 hover:bg-gray-50 transition border-b border-gray-100 last:border-0">
+                                <template x-if="item.image">
+                                    <img :src="item.image" :alt="item.title" class="w-10 h-10 object-cover rounded flex-shrink-0">
+                                </template>
+                                <template x-if="!item.image">
+                                    <div class="w-10 h-10 bg-gray-200 rounded flex-shrink-0 flex items-center justify-center">
+                                        <i class="fas fa-gamepad text-gray-400 text-sm"></i>
+                                    </div>
+                                </template>
+                                <div class="flex-1 min-w-0 text-right">
+                                    <p class="text-sm font-medium text-gray-800 truncate" x-text="item.title"></p>
+                                    <p class="text-xs text-[#30A38A]" x-text="item.type"></p>
+                                </div>
+                            </a>
+                        </template>
+                        <a :href="'{{ route('search') }}?q=' + encodeURIComponent(q)"
+                           class="block text-center text-xs text-[#30A38A] font-semibold py-2 hover:bg-gray-50 transition">
+                            عرض كل النتائج
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 
     {{-- Row 2: Categories nav — White background --}}
