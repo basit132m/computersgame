@@ -11,9 +11,20 @@ class DownloadLinkController extends Controller
 {
     public function index(Request $request)
     {
-        $post = Post::findOrFail($request->post_id);
-        $links = DownloadLink::where('post_id', $post->id)->orderBy('sort_order')->get();
-        return view('admin.download-links.index', compact('post', 'links'));
+        $query = Post::with(['downloadLinks' => fn($q) => $q->orderBy('sort_order')])
+            ->has('downloadLinks')
+            ->orderByDesc('updated_at');
+
+        if ($request->filled('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        $posts = $query->paginate(20)->withQueryString();
+
+        // For add-link form: all posts (for select dropdown)
+        $allPosts = Post::orderBy('title')->get(['id', 'title']);
+
+        return view('admin.download-links.index', compact('posts', 'allPosts'));
     }
 
     public function store(Request $request)
@@ -35,11 +46,18 @@ class DownloadLinkController extends Controller
     public function update(Request $request, DownloadLink $link)
     {
         $request->validate([
-            'label' => 'required|string|max:100',
-            'url'   => 'required|url',
+            'label'     => 'required|string|max:100',
+            'url'       => 'required|url',
+            'platform'  => 'nullable|string|max:50',
+            'file_size' => 'nullable|string|max:50',
+            'version'   => 'nullable|string|max:50',
         ]);
 
         $link->update($request->only(['label', 'url', 'platform', 'file_size', 'version']));
+
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true]);
+        }
         return back()->with('success', 'تم تحديث الرابط');
     }
 
