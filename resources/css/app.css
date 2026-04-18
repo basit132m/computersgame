@@ -55,20 +55,7 @@ body {
 .prose table th, .prose table td { border: 1px solid #e5e7eb; padding: 0.5rem 0.75rem; text-align: right; }
 .prose table th { background: #f9fafb; font-weight: 600; }
 
-/* Admin sidebar active link */
-.sidebar-link {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.625rem 1rem;
-    border-radius: 0.5rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    transition: all 0.15s ease;
-    color: #374151;
-}
-.sidebar-link:hover { background-color: #eff6ff; color: #1d4ed8; }
-.sidebar-link.active { background-color: #1d4ed8; color: #ffffff; }
+/* Admin sidebar — styles live in layouts/admin.blade.php */
 
 /* TinyMCE RTL fix */
 .tox-tinymce { direction: ltr !important; }
