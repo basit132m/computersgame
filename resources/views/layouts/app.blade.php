@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>@yield('title', $globalSettings['site_name'] ?? 'ألعاب الكمبيوتر')</title>
+    <title>@yield('title', $globalSettings['site_name'] ?? 'ألعاب الكمبيوتر') | {{ $globalSettings['site_name'] ?? 'ألعاب الكمبيوتر' }}</title>
     <meta name="description" content="@yield('meta_description', $globalSettings['site_description'] ?? '')">
     @hasSection('meta_keywords')
     <meta name="keywords" content="@yield('meta_keywords')">
