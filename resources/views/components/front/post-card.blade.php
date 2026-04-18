@@ -6,7 +6,7 @@
     {{-- Title --}}
     <div class="px-4 pt-4 pb-3 border-b border-gray-100">
         <a href="{{ url($post->slug) }}">
-            <h3 class="font-bold text-gray-900 text-base leading-snug hover:text-[#30A38A] transition text-center">
+            <h3 class="font-bold text-gray-900 text-base leading-snug hover:text-[#30A38A] transition text-right">
                 {{ $post->title }}
             </h3>
         </a>
