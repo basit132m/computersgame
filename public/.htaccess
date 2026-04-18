@@ -66,12 +66,13 @@
     ExpiresDefault "access plus 1 week"
 </IfModule>
 
-# Prevent browser from caching HTML responses
+# Prevent browser AND LiteSpeed/proxy from caching HTML responses
 <IfModule mod_headers.c>
     <FilesMatch "\.php$">
-        Header set Cache-Control "no-cache, no-store, must-revalidate"
+        Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
         Header set Pragma "no-cache"
         Header set Expires "0"
+        Header set X-LiteSpeed-Cache-Control "no-cache"
     </FilesMatch>
 </IfModule>
 
