@@ -106,6 +106,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.auth'])->grou
     // Profile (all authenticated admins)
     Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar');
+    Route::delete('profile/avatar', [ProfileController::class, 'removeAvatar'])->name('profile.avatar.remove');
 
     // AI / Gemini
     Route::post('ai/generate', [GeminiController::class, 'generate'])->name('ai.generate');

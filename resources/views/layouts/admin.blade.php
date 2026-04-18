@@ -207,13 +207,20 @@
         </div>
 
         {{-- User --}}
-        <div class="sidebar-user">
-            <div class="sidebar-avatar">{{ mb_substr(auth()->user()->name, 0, 1) }}</div>
+        <a href="{{ route('admin.profile.edit') }}" class="sidebar-user" style="text-decoration:none; display:flex; align-items:center; gap:10px; padding:12px 16px; border-bottom:1px solid var(--wp-sidebar-border);">
+            <div class="sidebar-avatar" style="overflow:hidden; flex-shrink:0;">
+                @if(auth()->user()->avatar)
+                    <img src="{{ asset('storage/'.auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}"
+                        style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+                @else
+                    {{ mb_substr(auth()->user()->name, 0, 1) }}
+                @endif
+            </div>
             <div class="user-info-text">
                 <div class="user-name">{{ auth()->user()->name }}</div>
                 <div class="user-role">{{ auth()->user()->role === 'admin' ? 'مدير — Admin' : 'محرر — Editor' }}</div>
             </div>
-        </div>
+        </a>
 
         {{-- Navigation --}}
         <nav class="flex-1 overflow-y-auto py-2">
