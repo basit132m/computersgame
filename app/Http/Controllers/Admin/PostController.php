@@ -52,6 +52,8 @@ class PostController extends Controller
                 $request->file('featured_image'),
                 'posts', 250, 200
             );
+        } elseif ($request->filled('featured_image_library')) {
+            $validated['featured_image'] = $request->input('featured_image_library');
         }
 
         if ($request->hasFile('banner_image')) {
@@ -59,6 +61,8 @@ class PostController extends Controller
                 $request->file('banner_image'),
                 'posts', 743, 418
             );
+        } elseif ($request->filled('banner_image_library')) {
+            $validated['banner_image'] = $request->input('banner_image_library');
         }
 
         if ($request->hasFile('gallery_images')) {
@@ -128,6 +132,8 @@ class PostController extends Controller
                 $request->file('featured_image'),
                 'posts', 250, 200
             );
+        } elseif ($request->filled('featured_image_library')) {
+            $validated['featured_image'] = $request->input('featured_image_library');
         }
 
         if ($request->hasFile('banner_image')) {
@@ -138,6 +144,8 @@ class PostController extends Controller
                 $request->file('banner_image'),
                 'posts', 743, 418
             );
+        } elseif ($request->filled('banner_image_library')) {
+            $validated['banner_image'] = $request->input('banner_image_library');
         }
 
         if ($request->hasFile('gallery_images')) {

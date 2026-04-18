@@ -15,8 +15,14 @@ class MediaLibrary extends Component
 
     public $uploads = [];
     public string $altText = '';
+    public string $search = '';
     public bool $uploading = false;
     public int $uploadProgress = 0;
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
 
     public function updatedUploads(): void
     {
@@ -73,8 +79,15 @@ class MediaLibrary extends Component
 
     public function render()
     {
+        $query = Media::with('uploader')->orderByDesc('created_at');
+        if ($this->search) {
+            $query->where(function ($q) {
+                $q->where('original_name', 'like', '%' . $this->search . '%')
+                  ->orWhere('alt_text', 'like', '%' . $this->search . '%');
+            });
+        }
         return view('livewire.media-library', [
-            'mediaItems' => Media::with('uploader')->orderByDesc('created_at')->paginate(24),
+            'mediaItems' => $query->paginate(24),
         ]);
     }
 }

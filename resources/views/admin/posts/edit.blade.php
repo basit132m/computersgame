@@ -376,10 +376,15 @@ tinymce.init({
             </div>
 
             {{-- Featured Image --}}
-            <div class="bg-white rounded-xl p-5 shadow-sm">
-                <label class="block font-medium text-gray-700 mb-3">الصورة الرئيسية <span class="en-hint">Featured Image (thumbnail)</span></label>
+            <div class="bg-white rounded-xl p-5 shadow-sm" x-data="mediaPicker('featured_image')">
+                <div class="flex items-center justify-between mb-3">
+                    <label class="font-medium text-gray-700">الصورة الرئيسية <span class="en-hint">Featured Image (thumbnail)</span></label>
+                    <button type="button" @click="open()" class="text-xs font-semibold text-blue-700 border border-blue-300 hover:bg-blue-50 px-3 py-1 rounded-lg transition flex items-center gap-1">
+                        <i class="fas fa-photo-video"></i> مكتبة الصور
+                    </button>
+                </div>
                 @if($post->featured_image)
-                <div class="relative mb-3 group">
+                <div class="relative mb-3 group" id="feat-existing">
                     <img src="{{ asset('storage/'.$post->featured_image) }}" alt="{{ $post->title }}"
                         class="w-full aspect-video object-cover rounded-lg" loading="lazy">
                     <div class="absolute top-1 left-1">
@@ -391,17 +396,29 @@ tinymce.init({
                     </div>
                 </div>
                 @endif
+                <div x-show="preview" class="mb-3 relative">
+                    <img :src="preview" class="w-full aspect-video object-cover rounded-lg border border-blue-300">
+                    <span class="absolute top-1 right-1 bg-blue-600 text-white text-xs px-2 py-0.5 rounded">من المكتبة</span>
+                    <button type="button" @click="clear()" class="absolute top-1 left-1 bg-red-600 hover:bg-red-700 text-white text-xs px-2 py-1 rounded shadow"><i class="fas fa-times"></i></button>
+                </div>
+                <input type="hidden" name="featured_image_library" x-model="libraryPath">
                 <input type="file" name="featured_image" accept="image/*"
+                    @change="libraryPath = ''; preview = ''"
                     class="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                <p class="text-xs text-gray-400 mt-1">{{ $post->featured_image ? 'رفع صورة جديدة يستبدل الحالية — Upload to replace' : 'Auto-converted to WebP 800×450' }}</p>
+                <p class="text-xs text-gray-400 mt-1">{{ $post->featured_image ? 'رفع صورة جديدة يستبدل الحالية — Upload to replace' : 'رفع ملف أو اختيار من المكتبة' }}</p>
             </div>
 
             {{-- Banner Image --}}
-            <div class="bg-white rounded-xl p-5 shadow-sm">
-                <label class="block font-medium text-gray-700 mb-3">
-                    <i class="fas fa-image text-[#30A38A] ml-1"></i>
-                    صورة البانر <span class="en-hint">Banner Image — top of article</span>
-                </label>
+            <div class="bg-white rounded-xl p-5 shadow-sm" x-data="mediaPicker('banner_image')">
+                <div class="flex items-center justify-between mb-3">
+                    <label class="font-medium text-gray-700">
+                        <i class="fas fa-image text-[#30A38A] ml-1"></i>
+                        صورة البانر <span class="en-hint">Banner Image — top of article</span>
+                    </label>
+                    <button type="button" @click="open()" class="text-xs font-semibold text-green-700 border border-green-300 hover:bg-green-50 px-3 py-1 rounded-lg transition flex items-center gap-1">
+                        <i class="fas fa-photo-video"></i> مكتبة الصور
+                    </button>
+                </div>
                 @if($post->banner_image)
                 <div class="relative mb-3 group">
                     <img src="{{ asset('storage/'.$post->banner_image) }}" alt="banner"
@@ -415,9 +432,16 @@ tinymce.init({
                     </div>
                 </div>
                 @endif
+                <div x-show="preview" class="mb-3 relative">
+                    <img :src="preview" class="w-full object-cover rounded-lg border border-green-300" style="max-height:140px;">
+                    <span class="absolute top-1 right-1 bg-green-600 text-white text-xs px-2 py-0.5 rounded">من المكتبة</span>
+                    <button type="button" @click="clear()" class="absolute top-1 left-1 bg-red-600 hover:bg-red-700 text-white text-xs px-2 py-1 rounded shadow"><i class="fas fa-times"></i></button>
+                </div>
+                <input type="hidden" name="banner_image_library" x-model="libraryPath">
                 <input type="file" name="banner_image" accept="image/*"
+                    @change="libraryPath = ''; preview = ''"
                     class="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
-                <p class="text-xs text-gray-400 mt-1">{{ $post->banner_image ? 'رفع صورة جديدة يستبدل الحالية — Upload to replace' : 'Displayed full-width at top of article' }}</p>
+                <p class="text-xs text-gray-400 mt-1">{{ $post->banner_image ? 'رفع صورة جديدة يستبدل الحالية — Upload to replace' : 'رفع ملف أو اختيار من المكتبة' }}</p>
             </div>
 
             {{-- Gallery Images --}}
@@ -490,6 +514,38 @@ tinymce.init({
 
 @push('scripts')
 <script>
+// Media library picker
+function mediaPicker(fieldName) {
+    return {
+        fieldName,
+        libraryPath: '',
+        preview: '',
+        init() {
+            window.addEventListener('media-selected', (e) => {
+                if (e.detail.field === this.fieldName) {
+                    this.libraryPath = e.detail.path;
+                    this.preview = e.detail.url;
+                }
+            });
+        },
+        open() {
+            const url = '/admin/media?select=1&field=' + this.fieldName;
+            window.open(url, 'media_picker_' + this.fieldName, 'width=1100,height=700,scrollbars=yes,resizable=yes');
+        },
+        clear() {
+            this.libraryPath = '';
+            this.preview = '';
+        }
+    };
+}
+window.addEventListener('message', function(e) {
+    if (e.data && e.data.mediaField) {
+        window.dispatchEvent(new CustomEvent('media-selected', {
+            detail: { field: e.data.mediaField, path: e.data.path, url: e.data.url }
+        }));
+    }
+});
+
 function deleteDownloadLink(id) {
     if (!confirm('حذف هذا الرابط؟')) return;
     const token = document.querySelector('meta[name=csrf-token]').content;
