@@ -328,11 +328,10 @@
 {{-- Scroll to Top Button --}}
 <button id="scrollTopBtn"
     onclick="window.scrollTo({top:0,behavior:'smooth'})"
-    style="display:none;"
-    class="fixed bottom-6 left-6 z-50 w-11 h-11 rounded-full bg-[#30A38A] hover:bg-[#268a74] text-white shadow-lg flex items-center justify-center transition-all duration-300"
+    style="position:fixed;bottom:24px;left:24px;z-index:9999;width:44px;height:44px;border-radius:50%;background:#30A38A;color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.25);"
     aria-label="العودة للأعلى"
     title="العودة للأعلى">
-    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
         <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
     </svg>
 </button>
@@ -341,7 +340,7 @@
     var btn = document.getElementById('scrollTopBtn');
     window.addEventListener('scroll', function(){
         btn.style.display = window.scrollY > 300 ? 'flex' : 'none';
-    }, { passive: true });
+    }, {passive:true});
 })();
 </script>
 
