@@ -3,7 +3,12 @@
 @section('title', $post->meta_title ?: $post->title . ' - تحميل مجاني')
 @section('meta_description', $post->meta_description ?: strip_tags($post->excerpt))
 @section('meta_keywords', $post->meta_keywords)
-@section('robots', $post->robots)
+@php
+    $robotsBase = $post->robots ?: 'index, follow';
+    $hasVideo = $post->youtube_url || str_contains($post->content ?? '', '<iframe');
+    $robotsFinal = $hasVideo ? $robotsBase . ', max-video-preview:0' : $robotsBase;
+@endphp
+@section('robots', $robotsFinal)
 @section('canonical', $post->canonical_url ?: url($post->slug))
 @section('og_type', 'article')
 @section('og_title', $post->og_title ?: $post->title)
@@ -42,6 +47,11 @@
             $imgTag = '<figure style="margin:1.25rem 0;text-align:center"><img src="' . asset('storage/' . $post->featured_image) . '" alt="' . e($post->title) . '" style="max-width:100%;border-radius:8px;" loading="lazy"></figure>';
             $content = mb_substr($content, 0, $pos + 4) . $imgTag . mb_substr($content, $pos + 4);
         }
+    }
+
+    // Add referrerpolicy="no-referrer" to all iframes in TinyMCE content
+    if (str_contains($content, '<iframe')) {
+        $content = preg_replace('/<iframe(?![^>]*referrerpolicy)/i', '<iframe referrerpolicy="no-referrer"', $content);
     }
 @endphp
 
@@ -295,8 +305,9 @@
                     <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line">فيديو شرح {{ $kw }}</h2>
                 </div>
                 <div class="aspect-video">
-                    <iframe src="https://www.youtube.com/embed/{{ $ytId }}"
+                    <iframe src="https://www.youtube-nocookie.com/embed/{{ $ytId }}"
                             title="{{ $post->title }} - فيديو"
+                            referrerpolicy="no-referrer"
                             class="w-full h-full" allowfullscreen loading="lazy"></iframe>
                 </div>
             </div>
