@@ -94,7 +94,7 @@
 
     {{-- Row 1: Black bar — Search | Logo | Social --}}
     <div class="bg-black">
-        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
+        <div class="max-w-7xl mx-auto px-6 h-24 flex items-center justify-between gap-4">
 
             {{-- Right: Social Icons --}}
             <div class="flex items-center gap-3">
@@ -121,15 +121,15 @@
             </div>
 
             {{-- Center: Logo --}}
-            <a href="{{ route('home') }}" class="flex-1 flex flex-col items-center justify-center text-center">
+            <a href="{{ route('home') }}" class="flex-1 flex flex-col items-center justify-center text-center gap-1">
                 @if(!empty($globalSettings['logo']))
                     <img src="{{ asset('storage/'.$globalSettings['logo']) }}"
                          alt="{{ $globalSettings['site_name'] ?? 'ألعاب الكمبيوتر' }}"
                          class="h-10 w-auto mx-auto">
                 @else
                     <span class="text-2xl font-black text-[#30A38A] leading-tight">{{ $globalSettings['site_name'] ?? 'ألعاب الكمبيوتر' }}</span>
-                    <span class="text-xs text-gray-400 leading-tight tracking-widest">computersgame.org</span>
                 @endif
+                <span class="text-white font-bold text-xs sm:text-sm leading-tight">تحميل العاب كمبيوتر وبرامج وتطبيقات اندرويد مجانا</span>
             </a>
 
             {{-- Left: Search Toggle --}}
