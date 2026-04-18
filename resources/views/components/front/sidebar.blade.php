@@ -24,6 +24,25 @@
     {{-- Sidebar Ad --}}
     @adslot('sidebar_ad')
 
+    {{-- بانرات مميزة --}}
+    @php $sideBanners = \App\Models\SidebarBanner::active()->get(); @endphp
+    @if($sideBanners->count())
+    <div class="space-y-2">
+        @foreach($sideBanners as $banner)
+        <a href="{{ $banner->url }}" class="block relative rounded-lg overflow-hidden group" style="aspect-ratio:341/179;">
+            <img src="{{ asset('storage/'.$banner->image) }}" alt="{{ $banner->title }}"
+                 class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                 loading="lazy">
+            @if($banner->title)
+            <div class="absolute bottom-0 inset-x-0 bg-red-600 px-3 py-1.5">
+                <p class="text-white text-xs font-bold text-center leading-snug truncate">{{ $banner->title }}</p>
+            </div>
+            @endif
+        </a>
+        @endforeach
+    </div>
+    @endif
+
     {{-- الأكثر تحميلاً --}}
     @if(count($trending))
     <div class="bg-white border border-gray-200 rounded overflow-hidden">

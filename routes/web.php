@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\SitemapController;
 use App\Http\Controllers\Admin\TagController as AdminTagController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\SidebarBannerController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Front\CategoryController;
 use App\Http\Controllers\Front\CommentController;
@@ -102,6 +103,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.auth'])->grou
 
     // Analytics
     Route::get('analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
+
+    // Sidebar Banners
+    Route::get('sidebar-banners', [SidebarBannerController::class, 'index'])->name('sidebar-banners.index');
+    Route::post('sidebar-banners', [SidebarBannerController::class, 'store'])->name('sidebar-banners.store');
+    Route::put('sidebar-banners/{sidebarBanner}', [SidebarBannerController::class, 'update'])->name('sidebar-banners.update');
+    Route::delete('sidebar-banners/{sidebarBanner}', [SidebarBannerController::class, 'destroy'])->name('sidebar-banners.destroy');
 
     // Profile (all authenticated admins)
     Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');

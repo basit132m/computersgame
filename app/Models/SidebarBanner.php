@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class SidebarBanner extends Model
+{
+    protected $fillable = ['image', 'url', 'title', 'sort_order', 'active'];
+
+    protected $casts = ['active' => 'boolean'];
+
+    public function scopeActive($query)
+    {
+        return $query->where('active', true)->orderBy('sort_order')->orderBy('id');
+    }
+}
