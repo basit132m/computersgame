@@ -3,20 +3,38 @@
 @section('title', 'تحميل العاب كمبيوتر وبرامج مجانية')
 @section('meta_description', 'تحميل أفضل العاب الكمبيوتر والبرامج وتطبيقات الأندرويد مجاناً. روابط مباشرة وسريعة.')
 @section('og_title', 'ألعاب الكمبيوتر - تحميل مجاني')
+@section('og_description', 'تحميل أفضل العاب الكمبيوتر والبرامج وتطبيقات الأندرويد مجاناً. روابط مباشرة وسريعة.')
 
 @section('schema')
 <script type="application/ld+json">
 {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "ألعاب الكمبيوتر",
+    "name": "{{ $globalSettings['site_name'] ?? 'ألعاب الكمبيوتر' }}",
     "url": "{{ config('app.url') }}",
-    "description": "تحميل أفضل العاب الكمبيوتر والبرامج وتطبيقات الأندرويد مجاناً",
+    "description": "{{ $globalSettings['site_description'] ?? 'تحميل أفضل العاب الكمبيوتر والبرامج وتطبيقات الأندرويد مجاناً' }}",
     "potentialAction": {
         "@type": "SearchAction",
         "target": "{{ url('/search?q={search_term_string}') }}",
         "query-input": "required name=search_term_string"
     }
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "{{ $globalSettings['site_name'] ?? 'ألعاب الكمبيوتر' }}",
+    "url": "{{ config('app.url') }}",
+    @if(!empty($globalSettings['logo']))
+    "logo": "{{ asset('storage/'.$globalSettings['logo']) }}",
+    @endif
+    "sameAs": [
+        @if(!empty($globalSettings['facebook_url']))"{{ $globalSettings['facebook_url'] }}"@endif
+        @if(!empty($globalSettings['twitter_url'])),{{ '"'.$globalSettings['twitter_url'].'"' }}@endif
+        @if(!empty($globalSettings['youtube_url'])),{{ '"'.$globalSettings['youtube_url'].'"' }}@endif
+        @if(!empty($globalSettings['telegram_url'])),{{ '"'.$globalSettings['telegram_url'].'"' }}@endif
+    ]
 }
 </script>
 @endsection
@@ -28,6 +46,11 @@
          Main Content (RIGHT in RTL)
     ═══════════════════════ --}}
     <div class="flex-1 min-w-0">
+
+        {{-- H1: SEO page heading (visually minimal) --}}
+        <h1 class="text-lg font-black text-gray-800 mb-4 pb-3 border-b border-gray-200">
+            تحميل العاب كمبيوتر وبرامج وتطبيقات اندرويد مجاناً
+        </h1>
 
         {{-- Header Ad --}}
         @adslot('header_ad')

@@ -69,22 +69,30 @@ class PostController extends Controller
             ];
         }
 
+        $image = $post->og_image ?? $post->banner_image ?? $post->featured_image;
+
         return match ($post->schema_type) {
-            'SoftwareApplication' => array_merge($base, [
+            'SoftwareApplication' => array_merge($base, array_filter([
                 '@type'               => 'SoftwareApplication',
                 'applicationCategory' => $post->category?->name,
                 'operatingSystem'     => $post->platform_ar,
                 'softwareVersion'     => $post->version,
                 'fileSize'            => $post->file_size,
+                'description'         => $post->excerpt ? strip_tags($post->excerpt) : null,
+                'image'               => $image ? asset('storage/' . $image) : null,
+                'downloadUrl'         => $post->downloadLinks->first()?->url,
                 'offers'              => ['@type' => 'Offer', 'price' => '0', 'priceCurrency' => 'SAR'],
-            ]),
-            'Article' => array_merge($base, [
+            ])),
+            'Article' => array_merge($base, array_filter([
                 '@type'         => 'Article',
                 'headline'      => $post->title,
+                'description'   => $post->excerpt ? strip_tags($post->excerpt) : null,
+                'image'         => $image ? asset('storage/' . $image) : null,
                 'datePublished' => $post->published_at?->toIso8601String(),
                 'dateModified'  => $post->updated_at?->toIso8601String(),
                 'author'        => ['@type' => 'Organization', 'name' => 'ألعاب الكمبيوتر'],
-            ]),
+                'publisher'     => ['@type' => 'Organization', 'name' => 'ألعاب الكمبيوتر'],
+            ])),
             default => $base,
         };
     }

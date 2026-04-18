@@ -21,6 +21,10 @@
     <meta property="og:locale" content="ar_AR">
     @hasSection('og_image')
     <meta property="og:image" content="@yield('og_image')">
+    <meta name="twitter:image" content="@yield('og_image')">
+    @elseif(!empty($globalSettings['logo']))
+    <meta property="og:image" content="{{ asset('storage/'.$globalSettings['logo']) }}">
+    <meta name="twitter:image" content="{{ asset('storage/'.$globalSettings['logo']) }}">
     @endif
 
     <meta name="twitter:card" content="summary_large_image">

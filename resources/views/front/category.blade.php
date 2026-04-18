@@ -2,7 +2,7 @@
 
 @section('title', ($category->meta_title ?: $category->name) . ' - تحميل مجاني')
 @section('meta_description', $category->meta_description ?: $category->description)
-@section('canonical', route('category.show', $category->slug))
+@section('canonical', request()->has('page') ? url()->full() : route('category.show', $category->slug))
 
 @section('schema')
 <script type="application/ld+json">

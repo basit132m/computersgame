@@ -8,7 +8,19 @@
 @section('og_type', 'article')
 @section('og_title', $post->og_title ?: $post->title)
 @section('og_description', $post->og_description ?: strip_tags($post->excerpt))
-@if($post->og_image)@section('og_image', asset('storage/'.$post->og_image))@endif
+@if($post->og_image)
+    @section('og_image', asset('storage/'.$post->og_image))
+@elseif($post->banner_image)
+    @section('og_image', asset('storage/'.$post->banner_image))
+@elseif($post->featured_image)
+    @section('og_image', asset('storage/'.$post->featured_image))
+@endif
+
+@if($post->banner_image)
+@push('head')
+<link rel="preload" as="image" href="{{ asset('storage/'.$post->banner_image) }}">
+@endpush
+@endif
 
 @section('schema')
 <script type="application/ld+json">

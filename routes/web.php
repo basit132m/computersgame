@@ -125,6 +125,7 @@ Route::get('/sitemap.xml', [FrontSitemapController::class, 'index']);
 Route::get('/sitemap-posts.xml', [FrontSitemapController::class, 'posts']);
 Route::get('/sitemap-categories.xml', [FrontSitemapController::class, 'categories']);
 Route::get('/sitemap-pages.xml', [FrontSitemapController::class, 'pages']);
+Route::get('/sitemap-tags.xml', [FrontSitemapController::class, 'tags']);
 
 // Frontend public routes
 Route::get('/', [HomeController::class, 'index'])->name('home');

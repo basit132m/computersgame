@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 
@@ -38,6 +39,13 @@ class SitemapController extends Controller
     public function pages(): Response
     {
         $content = view('sitemaps.pages')->render();
+        return response($content, 200, ['Content-Type' => 'application/xml']);
+    }
+
+    public function tags(): Response
+    {
+        $tags = Tag::has('posts')->select('slug', 'updated_at')->get();
+        $content = view('sitemaps.tags', compact('tags'))->render();
         return response($content, 200, ['Content-Type' => 'application/xml']);
     }
 }
