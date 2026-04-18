@@ -33,7 +33,7 @@
         @adslot('header_ad')
 
         {{-- Latest Posts List --}}
-        <div class="bg-white border border-gray-200 rounded overflow-hidden mb-8">
+        <div class="bg-white border border-gray-200 rounded overflow-hidden mb-5">
             <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-gray-50">
                 <h2 class="font-bold text-gray-900 flex items-center gap-2">
                     <i class="fas fa-clock text-[#30A38A] text-sm"></i>
@@ -60,7 +60,7 @@
 
         {{-- Latest Software --}}
         @if($latestSoftware->count())
-        <div class="bg-white border border-gray-200 rounded overflow-hidden mb-8">
+        <div class="bg-white border border-gray-200 rounded overflow-hidden mb-5">
             <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-gray-50">
                 <h2 class="font-bold text-gray-900 flex items-center gap-2">
                     <i class="fas fa-laptop text-[#30A38A] text-sm"></i>
@@ -80,7 +80,7 @@
 
         {{-- Latest APKs --}}
         @if($latestApks->count())
-        <div class="bg-white border border-gray-200 rounded overflow-hidden mb-8">
+        <div class="bg-white border border-gray-200 rounded overflow-hidden mb-5">
             <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-gray-50">
                 <h2 class="font-bold text-gray-900 flex items-center gap-2">
                     <i class="fas fa-mobile-alt text-[#30A38A] text-sm"></i>
