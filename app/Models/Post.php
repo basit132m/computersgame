@@ -114,10 +114,15 @@ class Post extends Model
 
     public function scopePublished($query)
     {
-        return $query->where('status', 'published')
-            ->where(function ($q) {
-                $q->whereNull('published_at')->orWhere('published_at', '<=', now());
-            });
+        return $query->where(function ($q) {
+            // status=published is always live regardless of published_at date
+            $q->where('status', 'published')
+              // status=scheduled only goes live once the publish date has passed
+              ->orWhere(function ($q2) {
+                  $q2->where('status', 'scheduled')
+                     ->where('published_at', '<=', now());
+              });
+        });
     }
 
     public function scopeOfType($query, string $type)
