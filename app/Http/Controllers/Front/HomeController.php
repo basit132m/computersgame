@@ -11,7 +11,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $trending = Cache::remember('home_trending', 3600, function () {
+        $trending = Cache::remember('home_trending', 300, function () {
             return Post::published()
                 ->withCount(['downloadClicks as weekly_downloads' => function ($q) {
                     $q->whereBetween('clicked_at', [now()->startOfWeek(), now()->endOfWeek()]);
@@ -21,15 +21,15 @@ class HomeController extends Controller
                 ->get();
         });
 
-        $latestSoftware = Cache::remember('home_latest_software', 3600, function () {
+        $latestSoftware = Cache::remember('home_latest_software', 300, function () {
             return Post::published()->ofType('software')->latest('published_at')->limit(8)->get();
         });
 
-        $latestApks = Cache::remember('home_latest_apks', 3600, function () {
+        $latestApks = Cache::remember('home_latest_apks', 300, function () {
             return Post::published()->ofType('apk')->latest('published_at')->limit(6)->get();
         });
 
-        $latestArticles = Cache::remember('home_latest_articles', 3600, function () {
+        $latestArticles = Cache::remember('home_latest_articles', 300, function () {
             return Post::published()
                 ->whereIn('type', ['blog', 'tutorial'])
                 ->latest('published_at')
@@ -41,7 +41,7 @@ class HomeController extends Controller
             return Category::whereNull('parent_id')->withCount('posts')->orderBy('sort_order')->limit(12)->get();
         });
 
-        $sidebarTrending = Cache::remember('sidebar_trending', 3600, function () {
+        $sidebarTrending = Cache::remember('sidebar_trending', 300, function () {
             return Post::published()->orderByDesc('downloads')->limit(10)->get();
         });
 
@@ -49,7 +49,7 @@ class HomeController extends Controller
             return \App\Models\Tag::withCount('posts')->orderByDesc('posts_count')->limit(20)->get();
         });
 
-        $latestPosts = Cache::remember('home_latest_all', 1800, function () {
+        $latestPosts = Cache::remember('home_latest_all', 300, function () {
             return Post::published()->latest('published_at')->limit(15)->get();
         });
 

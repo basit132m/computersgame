@@ -99,7 +99,7 @@ class PostController extends Controller
             }
         }
 
-        Cache::flush();
+        $this->clearPostCaches();
 
         return redirect()->route('admin.posts.edit', $post)
             ->with('success', 'تم حفظ المقال بنجاح');
@@ -190,7 +190,7 @@ class PostController extends Controller
             }
         }
 
-        Cache::flush();
+        $this->clearPostCaches();
 
         return back()->with('success', 'تم تحديث المقال بنجاح');
     }
@@ -201,7 +201,7 @@ class PostController extends Controller
             ImageService::delete($post->featured_image);
         }
         $post->delete();
-        Cache::flush();
+        $this->clearPostCaches();
 
         return redirect()->route('admin.posts.index')->with('success', 'تم حذف المقال');
     }
@@ -212,7 +212,7 @@ class PostController extends Controller
             'status'       => 'published',
             'published_at' => $post->published_at ?? now(),
         ]);
-        Cache::flush();
+        $this->clearPostCaches();
 
         return back()->with('success', 'تم نشر المقال');
     }
@@ -226,7 +226,7 @@ class PostController extends Controller
             $gallery[] = ImageService::uploadWebP($img, 'gallery', 743, 418);
         }
         $post->update(['gallery_images' => $gallery]);
-        Cache::flush();
+        $this->clearPostCaches();
 
         return back()->with('success', 'تم إضافة الصور بنجاح');
     }
@@ -238,7 +238,7 @@ class PostController extends Controller
             ImageService::delete($gallery[$index]);
             array_splice($gallery, $index, 1);
             $post->update(['gallery_images' => array_values($gallery) ?: null]);
-            Cache::flush();
+            $this->clearPostCaches();
         }
 
         return back()->with('success', 'تم حذف الصورة');
@@ -252,10 +252,27 @@ class PostController extends Controller
         if ($post->$field) {
             ImageService::delete($post->$field);
             $post->update([$field => null]);
-            Cache::flush();
+            $this->clearPostCaches();
         }
 
         return back()->with('success', 'تم حذف الصورة');
+    }
+
+    private function clearPostCaches(): void
+    {
+        $keys = [
+            'home_trending',
+            'home_latest_software',
+            'home_latest_apks',
+            'home_latest_articles',
+            'home_categories',
+            'home_latest_all',
+            'sidebar_trending',
+            'sidebar_tags',
+        ];
+        foreach ($keys as $key) {
+            Cache::forget($key);
+        }
     }
 
     private function validatePost(Request $request): array

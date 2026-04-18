@@ -27,7 +27,7 @@ class CategoryController extends Controller
 
         $posts = $query->paginate(12)->withQueryString();
 
-        $sidebarTrending = Cache::remember('sidebar_trending', 3600, function () {
+        $sidebarTrending = Cache::remember('sidebar_trending', 300, function () {
             return \App\Models\Post::published()->orderByDesc('downloads')->limit(10)->get();
         });
 
