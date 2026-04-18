@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Models\AdSlot;
+use App\Models\Category;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -23,6 +25,21 @@ class AppServiceProvider extends ServiceProvider
                 \$_adCode = \\App\\Models\\AdSlot::getCode($expression);
                 if (\$_adCode): echo \$_adCode; endif;
             ?>";
+        });
+
+        // Share nav categories with all views (cached — cleared when categories change)
+        View::composer('*', function ($view) {
+            static $navCategories = null;
+            if ($navCategories === null) {
+                try {
+                    $navCategories = Cache::remember('nav_categories', 21600, function () {
+                        return Category::whereNull('parent_id')->orderBy('sort_order')->limit(16)->get();
+                    });
+                } catch (\Exception $e) {
+                    $navCategories = collect();
+                }
+            }
+            $view->with('navCategories', $navCategories);
         });
 
         // Share global site settings with all views

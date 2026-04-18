@@ -31,13 +31,22 @@
 
     @yield('pagination_links')
 
-    {{-- Google Fonts --}}
+    {{-- DNS prefetch for external resources --}}
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+
+    {{-- Google Fonts: preconnect + preload to avoid render-blocking --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap"
+          onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap"></noscript>
 
-    {{-- Font Awesome 6 --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+    {{-- Font Awesome 6: load async so it never blocks first paint --}}
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous"></noscript>
 
     {{-- Vite Assets --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -162,11 +171,8 @@
                 <a href="{{ route('home') }}" class="cat-btn">
                     <i class="fas fa-home"></i> الرئيسية
                 </a>
-                @php
-                    $navCategories = \App\Models\Category::whereNull('parent_id')->orderBy('sort_order')->limit(8)->get();
-                    $catIcons = ['fa-gamepad','fa-car','fa-futbol','fa-motorcycle','fa-fighter-jet','fa-dragon','fa-chess','fa-crosshairs','fa-trophy','fa-dice'];
-                @endphp
-                @foreach($navCategories as $i => $cat)
+                @php $catIcons = ['fa-gamepad','fa-car','fa-futbol','fa-motorcycle','fa-fighter-jet','fa-dragon','fa-chess','fa-crosshairs','fa-trophy','fa-dice']; @endphp
+                @foreach($navCategories->take(8) as $i => $cat)
                 <a href="{{ route('category.show', $cat->slug) }}" class="cat-btn">
                     <i class="fas {{ $catIcons[$i % count($catIcons)] }}"></i>
                     {{ $cat->name }}
@@ -199,7 +205,7 @@
              x-transition:enter-end="opacity-100 translate-y-0"
              class="md:hidden border-t border-gray-100 bg-white px-4 pb-3">
             <div class="grid grid-cols-2 gap-2 pt-3">
-                @foreach(\App\Models\Category::whereNull('parent_id')->orderBy('sort_order')->limit(12)->get() as $i => $cat)
+                @foreach($navCategories->take(12) as $i => $cat)
                 <a href="{{ route('category.show', $cat->slug) }}"
                    class="flex items-center gap-2 px-3 py-2 rounded border border-gray-200 text-sm font-bold text-[#30A38A] hover:bg-[#30A38A] hover:text-white hover:border-[#30A38A] transition">
                     <i class="fas {{ $catIcons[$i % count($catIcons)] }} text-xs"></i>
@@ -284,7 +290,7 @@
                         <i class="fas fa-gamepad text-sm"></i> أقسام الموقع
                     </h4>
                     <ul class="space-y-2 text-sm text-gray-400">
-                        @foreach(\App\Models\Category::whereNull('parent_id')->orderBy('sort_order')->limit(7)->get() as $cat)
+                        @foreach($navCategories->take(7) as $cat)
                         <li>
                             <a href="{{ route('category.show', $cat->slug) }}"
                                class="hover:text-[#30A38A] transition flex items-center gap-2">

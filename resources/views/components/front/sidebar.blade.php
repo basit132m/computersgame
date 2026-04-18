@@ -11,7 +11,7 @@
             <h3 class="font-bold text-gray-900 text-sm">أقسام الموقع</h3>
         </div>
         <div class="grid grid-cols-2 gap-2 p-3">
-            @foreach(\App\Models\Category::whereNull('parent_id')->orderBy('sort_order')->limit(16)->get() as $cat)
+            @foreach($navCategories as $cat)
             <a href="{{ route('category.show', $cat->slug) }}"
                class="flex items-center gap-1.5 border border-gray-300 rounded px-2 py-2 text-xs text-gray-700 hover:border-[#30A38A] hover:text-[#30A38A] transition truncate">
                 <i class="fas fa-play-circle text-gray-400 text-xs flex-shrink-0"></i>
@@ -32,7 +32,7 @@
         <a href="{{ $banner->url }}" class="block relative rounded-lg overflow-hidden group" style="aspect-ratio:341/179;">
             <img src="{{ asset('storage/'.$banner->image) }}" alt="{{ $banner->title }}"
                  class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                 loading="lazy">
+                 loading="lazy" width="341" height="179">
             @if($banner->title)
             <div class="absolute bottom-0 inset-x-0 bg-red-600 px-3 py-1.5">
                 <p class="text-white text-xs font-bold text-center leading-snug truncate">{{ $banner->title }}</p>

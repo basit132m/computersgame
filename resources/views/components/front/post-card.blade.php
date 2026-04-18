@@ -1,4 +1,4 @@
-@props(['post', 'variant' => 'grid'])
+@props(['post', 'variant' => 'grid', 'priority' => false])
 
 @if($variant === 'list')
 {{-- Standalone card: title on top, image + excerpt below --}}
@@ -19,7 +19,9 @@
             <img src="{{ \App\Services\ImageService::getThumbUrl($post->featured_image) }}"
                  alt="{{ $post->title }}"
                  class="w-36 h-24 object-cover rounded border border-gray-200 group-hover:opacity-90 transition"
-                 loading="lazy" width="144" height="96">
+                 loading="{{ $priority ? 'eager' : 'lazy' }}"
+                 {{ $priority ? 'fetchpriority=high' : '' }}
+                 width="144" height="96">
             @else
             <div class="w-36 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded flex items-center justify-center">
                 <i class="fas fa-gamepad text-gray-400 text-2xl"></i>

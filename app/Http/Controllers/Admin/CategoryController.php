@@ -48,7 +48,7 @@ class CategoryController extends Controller
         }
 
         Category::create($data);
-        Cache::forget('categories_list');
+        Cache::forget('categories_list'); Cache::forget('nav_categories');
 
         return redirect()->route('admin.categories.index')->with('success', 'تم إضافة التصنيف');
     }
@@ -80,7 +80,7 @@ class CategoryController extends Controller
         }
 
         $category->update($data);
-        Cache::forget('categories_list');
+        Cache::forget('categories_list'); Cache::forget('nav_categories');
 
         return redirect()->route('admin.categories.index')->with('success', 'تم تحديث التصنيف');
     }
@@ -88,7 +88,7 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
-        Cache::forget('categories_list');
+        Cache::forget('categories_list'); Cache::forget('nav_categories');
         return redirect()->route('admin.categories.index')->with('success', 'تم حذف التصنيف');
     }
 }

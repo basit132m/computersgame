@@ -45,7 +45,7 @@
             </div>
             <div class="space-y-3">
                 @forelse($latestPosts as $post)
-                    <x-front.post-card :post="$post" variant="list" />
+                    <x-front.post-card :post="$post" variant="list" :priority="$loop->index < 3" />
                 @empty
                     <div class="py-12 text-center text-gray-400 bg-white border border-gray-200 rounded-lg">
                         <i class="fas fa-inbox text-4xl mb-3 block"></i>

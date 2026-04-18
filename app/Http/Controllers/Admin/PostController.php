@@ -269,6 +269,7 @@ class PostController extends Controller
             'home_latest_all',
             'sidebar_trending',
             'sidebar_tags',
+            'nav_categories',
         ];
         foreach ($keys as $key) {
             Cache::forget($key);
