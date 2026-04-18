@@ -113,7 +113,14 @@
                             <p class="text-white text-xs">اسم اللعبة</p>
                         </div>
                         <div class="bg-white text-center py-2 px-2">
-                            <p class="text-sm font-bold text-gray-800 leading-snug">{{ Str::limit($post->title, 28) }}</p>
+                            @if($post->game_url)
+                            <a href="{{ $post->game_url }}" target="_blank" rel="noopener noreferrer"
+                               class="text-sm font-bold text-blue-700 hover:underline leading-snug block">
+                                {{ Str::limit($post->game_name ?: $post->title, 28) }}
+                            </a>
+                            @else
+                            <p class="text-sm font-bold text-gray-800 leading-snug">{{ Str::limit($post->game_name ?: $post->title, 28) }}</p>
+                            @endif
                         </div>
                     </div>
                     @if($post->developer)

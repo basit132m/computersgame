@@ -279,6 +279,8 @@ class PostController extends Controller
     {
         return $request->validate([
             'title'               => 'required|string|max:255',
+            'game_name'           => 'nullable|string|max:255',
+            'game_url'            => 'nullable|url|max:500',
             'slug'                => 'nullable|string|max:255',
             'excerpt'             => 'nullable|string',
             'content'             => 'nullable|string',

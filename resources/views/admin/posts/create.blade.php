@@ -110,6 +110,16 @@ tinymce.init({
                 </h3>
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                     <div>
+                        <label class="text-sm font-medium text-gray-600 mb-1 block">اسم اللعبة <span class="en-hint">Game Name (overrides title in info card)</span></label>
+                        <input type="text" name="game_name" value="{{ old('game_name') }}"
+                            class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="اسم اللعبة أو البرنامج">
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-600 mb-1 block">رابط اسم اللعبة <span class="en-hint">Game Name URL</span></label>
+                        <input type="url" name="game_url" value="{{ old('game_url') }}"
+                            class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://...">
+                    </div>
+                    <div>
                         <label class="text-sm font-medium text-gray-600 mb-1 block">الإصدار <span class="en-hint">Version</span></label>
                         <input type="text" name="version" value="{{ old('version') }}"
                             class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g. 1.0.0">

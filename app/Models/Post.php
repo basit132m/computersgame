@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Post extends Model
 {
     protected $fillable = [
-        'title', 'slug', 'excerpt', 'content', 'type', 'status',
+        'title', 'game_name', 'game_url', 'slug', 'excerpt', 'content', 'type', 'status',
         'featured_image', 'banner_image', 'gallery_images',
         'version', 'developer', 'developer_url', 'publisher', 'publisher_url', 'file_size', 'game_language', 'platform',
         'release_date', 'updated_date', 'system_requirements', 'features',

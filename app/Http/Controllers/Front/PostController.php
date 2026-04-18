@@ -25,14 +25,12 @@ class PostController extends Controller
             Cache::put($cacheKey, true, 3600);
         }
 
-        $relatedPosts = Cache::remember('related_' . $post->id, 1800, function () use ($post) {
-            return Post::published()
-                ->where('id', '!=', $post->id)
-                ->where('category_id', $post->category_id)
-                ->latest('published_at')
-                ->limit(6)
-                ->get();
-        });
+        $relatedPosts = Post::published()
+            ->where('id', '!=', $post->id)
+            ->where('category_id', $post->category_id)
+            ->latest('published_at')
+            ->limit(6)
+            ->get();
 
         $sidebarTrending = Cache::remember('sidebar_trending', 3600, function () {
             return Post::published()->orderByDesc('downloads')->limit(10)->get();
