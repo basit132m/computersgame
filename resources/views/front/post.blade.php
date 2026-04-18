@@ -221,7 +221,7 @@
             {{-- ③ مميزات --}}
             @if($post->features)
             <div class="p-5 border-b border-gray-100">
-                <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line">مميزات {{ $kw }}</h2>
+                <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line"><i class="fas fa-check-circle text-[#30A38A] ml-2"></i>مميزات {{ $kw }}</h2>
                 @foreach(array_filter(explode("\n", $post->features)) as $line)
                 <div class="flex items-start gap-2 mb-2">
                     <i class="fas fa-check text-[#30A38A] text-xs mt-1 flex-shrink-0"></i>
@@ -234,7 +234,7 @@
             {{-- ④ المميزات والعيوب --}}
             @if($post->pros || $post->cons)
             <div class="p-5 border-b border-gray-100">
-                <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line">المميزات والعيوب</h2>
+                <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line"><i class="fas fa-balance-scale text-blue-500 ml-2"></i>المميزات والعيوب</h2>
                 <table class="w-full border-collapse text-sm text-center">
                     <thead>
                         <tr>
@@ -280,7 +280,7 @@
             {{-- ⑤ ما الجديد --}}
             @if($post->whats_new)
             <div class="p-5 border-b border-gray-100">
-                <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line">ما الجديد في هذا الإصدار</h2>
+                <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line"><i class="fas fa-bolt text-yellow-500 ml-2"></i>ما الجديد في هذا الإصدار</h2>
                 @foreach(array_filter(explode("\n", $post->whats_new)) as $line)
                 <div class="flex items-start gap-2 mb-2">
                     <i class="fas fa-check text-[#30A38A] text-xs mt-1 flex-shrink-0"></i>
@@ -299,7 +299,7 @@
             @if($ytId)
             <div class="border-b border-gray-100">
                 <div class="px-5 pt-5 pb-3">
-                    <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line">فيديو شرح {{ $kw }}</h2>
+                    <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line"><i class="fas fa-play-circle text-red-500 ml-2"></i>فيديو شرح {{ $kw }}</h2>
                 </div>
                 <div class="aspect-video">
                     <iframe src="https://www.youtube.com/embed/{{ $ytId }}"
@@ -314,7 +314,7 @@
             {{-- ⑦ صور من داخل --}}
             @if($post->gallery_images && count($post->gallery_images))
             <div class="p-5 border-b border-gray-100">
-                <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line">صور من داخل {{ $kw }}</h2>
+                <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line"><i class="fas fa-images text-purple-500 ml-2"></i>صور من داخل {{ $kw }}</h2>
                 <div class="flex flex-col gap-3">
                     @foreach($post->gallery_images as $img)
                     <a href="{{ asset('storage/'.$img) }}" target="_blank" class="block overflow-hidden rounded-lg">
@@ -334,7 +334,7 @@
             @endphp
             @if($hasSysReq)
             <div class="p-5 border-b border-gray-100">
-                <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line">متطلبات تشغيل {{ $kw }}</h2>
+                <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line"><i class="fas fa-microchip text-blue-600 ml-2"></i>متطلبات تشغيل {{ $kw }}</h2>
                 @if($post->sys_req_os || $post->sys_req_cpu || $post->sys_req_gpu || $post->sys_req_ram || $post->sys_req_storage || $post->sys_req_software)
                 <div class="overflow-hidden rounded-lg border border-gray-200">
                     <table class="w-full text-sm">
@@ -420,7 +420,7 @@
             {{-- ⑩ تقييم --}}
             <div class="p-5 border-b border-gray-100"
                  x-data="ratingWidget({{ $post->id }}, {{ $post->average_rating }}, {{ $post->ratings_count }}, {{ $userRating ?? 'null' }})">
-                <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line">تقييم {{ $kw }}</h2>
+                <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line"><i class="fas fa-star text-yellow-400 ml-2"></i>تقييم {{ $kw }}</h2>
                 <div class="flex items-center gap-6">
                     <div class="text-center border-l pl-6">
                         <p class="text-4xl font-bold text-gray-800" x-text="avgRating.toFixed(1)"></p>
