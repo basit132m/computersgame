@@ -33,8 +33,8 @@
         @adslot('header_ad')
 
         {{-- Latest Posts List --}}
-        <div class="bg-white border border-gray-200 rounded overflow-hidden mb-5">
-            <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-gray-50">
+        <div class="mb-5">
+            <div class="flex items-center justify-between px-1 py-2 mb-3">
                 <h2 class="font-bold text-gray-900 flex items-center gap-2">
                     <i class="fas fa-clock text-[#30A38A] text-sm"></i>
                     أحدث الإضافات
@@ -43,11 +43,11 @@
                     عرض الكل <i class="fas fa-angle-left text-xs"></i>
                 </a>
             </div>
-            <div class="px-4">
+            <div class="space-y-3">
                 @forelse($latestPosts as $post)
                     <x-front.post-card :post="$post" variant="list" />
                 @empty
-                    <div class="py-12 text-center text-gray-400">
+                    <div class="py-12 text-center text-gray-400 bg-white border border-gray-200 rounded-lg">
                         <i class="fas fa-inbox text-4xl mb-3 block"></i>
                         <p>لا توجد مقالات بعد</p>
                     </div>
@@ -60,8 +60,8 @@
 
         {{-- Latest Software --}}
         @if($latestSoftware->count())
-        <div class="bg-white border border-gray-200 rounded overflow-hidden mb-5">
-            <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-gray-50">
+        <div class="mb-5">
+            <div class="flex items-center justify-between px-1 py-2 mb-3">
                 <h2 class="font-bold text-gray-900 flex items-center gap-2">
                     <i class="fas fa-laptop text-[#30A38A] text-sm"></i>
                     أحدث البرامج
@@ -70,7 +70,7 @@
                     عرض الكل <i class="fas fa-angle-left text-xs"></i>
                 </a>
             </div>
-            <div class="px-4">
+            <div class="space-y-3">
                 @foreach($latestSoftware as $post)
                     <x-front.post-card :post="$post" variant="list" />
                 @endforeach
@@ -80,8 +80,8 @@
 
         {{-- Latest APKs --}}
         @if($latestApks->count())
-        <div class="bg-white border border-gray-200 rounded overflow-hidden mb-5">
-            <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-gray-50">
+        <div class="mb-5">
+            <div class="flex items-center justify-between px-1 py-2 mb-3">
                 <h2 class="font-bold text-gray-900 flex items-center gap-2">
                     <i class="fas fa-mobile-alt text-[#30A38A] text-sm"></i>
                     تطبيقات الأندرويد
@@ -90,7 +90,7 @@
                     عرض الكل <i class="fas fa-angle-left text-xs"></i>
                 </a>
             </div>
-            <div class="px-4">
+            <div class="space-y-3">
                 @foreach($latestApks as $post)
                     <x-front.post-card :post="$post" variant="list" />
                 @endforeach

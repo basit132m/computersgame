@@ -1,31 +1,37 @@
 @props(['post', 'variant' => 'grid'])
 
 @if($variant === 'list')
-{{-- Horizontal list card — image on right, content on left --}}
-<article class="flex gap-4 py-4 border-b border-gray-200 last:border-0 group">
-    {{-- Image — right side (first in DOM = right in RTL) --}}
-    <a href="{{ url($post->slug) }}" class="flex-shrink-0">
-        @if($post->featured_image)
-        <img src="{{ \App\Services\ImageService::getThumbUrl($post->featured_image) }}"
-             alt="{{ $post->title }}"
-             class="w-32 h-24 object-cover rounded group-hover:opacity-90 transition"
-             loading="lazy" width="128" height="96">
-        @else
-        <div class="w-32 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded flex items-center justify-center">
-            <i class="fas fa-gamepad text-gray-400 text-2xl"></i>
-        </div>
-        @endif
-    </a>
-    {{-- Content --}}
-    <div class="flex-1 min-w-0">
+{{-- Standalone card: title on top, image + excerpt below --}}
+<article class="bg-white border border-gray-200 rounded-lg overflow-hidden group">
+    {{-- Title --}}
+    <div class="px-4 pt-4 pb-3 border-b border-gray-100">
         <a href="{{ url($post->slug) }}">
-            <h3 class="font-bold text-gray-900 text-base leading-snug hover:text-[#30A38A] transition mb-2 line-clamp-2">
+            <h3 class="font-bold text-gray-900 text-base leading-snug hover:text-[#30A38A] transition text-center">
                 {{ $post->title }}
             </h3>
         </a>
-        @if($post->excerpt)
-        <p class="text-sm text-gray-500 line-clamp-3 leading-relaxed">{{ strip_tags($post->excerpt) }}</p>
-        @endif
+    </div>
+    {{-- Image + Excerpt --}}
+    <div class="flex gap-4 p-4">
+        {{-- Image — right side in RTL --}}
+        <a href="{{ url($post->slug) }}" class="flex-shrink-0">
+            @if($post->featured_image)
+            <img src="{{ \App\Services\ImageService::getThumbUrl($post->featured_image) }}"
+                 alt="{{ $post->title }}"
+                 class="w-36 h-24 object-cover rounded border border-gray-200 group-hover:opacity-90 transition"
+                 loading="lazy" width="144" height="96">
+            @else
+            <div class="w-36 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded flex items-center justify-center">
+                <i class="fas fa-gamepad text-gray-400 text-2xl"></i>
+            </div>
+            @endif
+        </a>
+        {{-- Excerpt --}}
+        <div class="flex-1 min-w-0">
+            @if($post->excerpt)
+            <p class="text-sm text-gray-500 line-clamp-3 leading-relaxed">{{ strip_tags($post->excerpt) }}</p>
+            @endif
+        </div>
     </div>
 </article>
 @else
