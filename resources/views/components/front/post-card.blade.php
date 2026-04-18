@@ -2,7 +2,7 @@
 
 @if($variant === 'list')
 {{-- Horizontal list card — image on right, content on left --}}
-<article class="flex gap-4 py-4 border-b border-gray-200 last:border-0 group">
+<article class="flex gap-4 py-5 border-b border-gray-200 last:border-0 group">
     {{-- Image — right side (first in DOM = right in RTL) --}}
     <a href="{{ url($post->slug) }}" class="flex-shrink-0">
         @if($post->featured_image)
