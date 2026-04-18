@@ -361,6 +361,9 @@
 
             {{-- ⑨ تحميل --}}
             @if($post->downloadLinks->count())
+            @php
+                $articleDirectUrl = \App\Models\AdSlot::where('slot_key','download_btn_direct_url')->where('active',true)->value('code');
+            @endphp
             <div class="p-5 border-b border-gray-100">
                 {{-- Title bar --}}
                 <div class="flex items-center justify-end gap-3 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mb-3">
@@ -376,6 +379,7 @@
                 {{-- Link buttons --}}
                 <div class="flex flex-col gap-3">
                     @foreach($post->downloadLinks as $link)
+                    {{-- Main download button --}}
                     <a href="{{ route('download.show', $post->slug) }}" target="_blank"
                        onclick="trackDownload({{ $post->id }})"
                        class="flex items-center rounded-lg overflow-hidden w-full hover:opacity-90 transition"
@@ -390,6 +394,16 @@
                         </span>
                         @endif
                     </a>
+                    {{-- Ad button (only when direct URL is configured) --}}
+                    @if($articleDirectUrl)
+                    <button type="button"
+                        onclick="handleArticleAdClick(this, {{ $post->id }}, '{{ addslashes(route('download.show', $post->slug)) }}', '{{ addslashes($articleDirectUrl) }}')"
+                        class="flex items-center justify-center gap-2 w-full rounded-lg py-3 px-4 font-bold text-sm transition hover:opacity-90"
+                        style="background:#f59e0b; color:#fff;">
+                        <i class="fas fa-download"></i>
+                        تحميل مباشر
+                    </button>
+                    @endif
                     @endforeach
                 </div>
             </div>
@@ -552,6 +566,21 @@ function trackDownload(postId) {
         headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
         body: JSON.stringify({ post_id: postId, source: 'article_button' })
     });
+}
+
+// Ad button: first click → direct URL (new tab), second click → download page
+function handleArticleAdClick(btn, postId, downloadUrl, directUrl) {
+    const key = 'ad_click_' + postId;
+    const clicked = sessionStorage.getItem(key);
+    if (!clicked) {
+        sessionStorage.setItem(key, '1');
+        window.open(directUrl, '_blank', 'noopener');
+        // After opening ad, change button text to hint next click goes to download
+        btn.innerHTML = '<i class="fas fa-download"></i> اضغط مرة أخرى للتحميل';
+    } else {
+        sessionStorage.removeItem(key);
+        window.open(downloadUrl, '_blank', 'noopener');
+    }
 }
 function copyLink(url) {
     navigator.clipboard.writeText(url).then(() => alert('تم نسخ الرابط!'));

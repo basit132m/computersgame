@@ -36,22 +36,23 @@
         </div>
 
         {{-- Download Links (shown after timer) --}}
+        @php $timerDirectUrl = \App\Models\AdSlot::where('slot_key','timer_page_direct_url')->where('active',true)->value('code'); @endphp
         <div class="p-6" x-show="ready" x-transition>
             <h2 class="text-lg font-bold text-gray-900 mb-4 text-center">✅ اختر رابط التحميل</h2>
             <div class="space-y-3">
                 @forelse($post->downloadLinks as $link)
-                <a href="{{ $link->url }}" target="_blank" rel="nofollow noopener"
-                    onclick="trackLinkClick({{ $post->id }}, {{ $link->id }})"
-                    class="flex items-center justify-between bg-blue-700 hover:bg-blue-800 text-white font-bold py-4 px-6 rounded-xl transition">
+                <button type="button"
+                    onclick="handleTimerDownload(this, {{ $post->id }}, {{ $link->id }}, '{{ addslashes($link->url) }}', '{{ addslashes($timerDirectUrl ?? '') }}')"
+                    class="flex items-center justify-between w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-4 px-6 rounded-xl transition">
                     <span class="flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                        {{ $link->label }}
+                        <span class="btn-label-{{ $link->id }}">{{ $link->label }}</span>
                     </span>
                     <span class="text-sm text-blue-200">
                         @if($link->file_size){{ $link->file_size }}@endif
                         @if($link->version) - v{{ $link->version }}@endif
                     </span>
-                </a>
+                </button>
                 @empty
                 <p class="text-center text-gray-500">لا توجد روابط تحميل متاحة حالياً</p>
                 @endforelse
@@ -92,12 +93,34 @@ function downloadTimer() {
 function trackLinkClick(postId, linkId) {
     fetch('/download/click', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        },
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
         body: JSON.stringify({ post_id: postId, link_id: linkId, source: 'timer_page' })
     });
+}
+
+// First click → direct URL (new tab); second click → actual download URL
+function handleTimerDownload(btn, postId, linkId, downloadUrl, directUrl) {
+    trackLinkClick(postId, linkId);
+
+    if (!directUrl) {
+        // No direct URL configured — go straight to download
+        window.open(downloadUrl, '_blank', 'noopener');
+        return;
+    }
+
+    const key = 'timer_click_' + linkId;
+    const clicked = sessionStorage.getItem(key);
+
+    if (!clicked) {
+        sessionStorage.setItem(key, '1');
+        window.open(directUrl, '_blank', 'noopener');
+        // Update button label to signal next click triggers download
+        const label = btn.querySelector('.btn-label-' + linkId);
+        if (label) label.textContent = 'اضغط مرة أخرى للتحميل';
+    } else {
+        sessionStorage.removeItem(key);
+        window.open(downloadUrl, '_blank', 'noopener');
+    }
 }
 </script>
 @endsection

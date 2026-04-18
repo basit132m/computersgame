@@ -9,14 +9,20 @@ use Illuminate\Http\Request;
 class AdSlotController extends Controller
 {
     private array $slots = [
-        'header_ad'         => 'إعلان رأس الصفحة (تحت القائمة)',
-        'sidebar_ad'        => 'إعلان الشريط الجانبي',
-        'in_content_ad_1'   => 'إعلان داخل المحتوى (بعد 3 فقرات)',
-        'in_content_ad_2'   => 'إعلان داخل المحتوى (بعد المتطلبات)',
+        'header_ad'          => 'إعلان رأس الصفحة (تحت القائمة)',
+        'sidebar_ad'         => 'إعلان الشريط الجانبي',
+        'in_content_ad_1'    => 'إعلان داخل المحتوى (بعد 3 فقرات)',
+        'in_content_ad_2'    => 'إعلان داخل المحتوى (بعد المتطلبات)',
         'before_download_ad' => 'إعلان قبل زر التحميل',
-        'timer_ad_top'      => 'إعلان أعلى صفحة التحميل',
-        'timer_ad_bottom'   => 'إعلان أسفل صفحة التحميل',
-        'footer_ad'         => 'إعلان أعلى التذييل',
+        'timer_ad_top'       => 'إعلان أعلى صفحة التحميل',
+        'timer_ad_bottom'    => 'إعلان أسفل صفحة التحميل',
+        'footer_ad'          => 'إعلان أعلى التذييل',
+    ];
+
+    // Direct-link slots — stored as plain URLs, not ad HTML
+    private array $directLinks = [
+        'download_btn_direct_url' => 'الرابط المباشر — زر الإعلان في صفحة المقال',
+        'timer_page_direct_url'   => 'الرابط المباشر — أزرار التحميل في صفحة التحميل (بعد التايمر)',
     ];
 
     public function index()
@@ -28,22 +34,33 @@ class AdSlotController extends Controller
                 'label'  => $label,
                 'code'   => $slot?->code,
                 'active' => $slot?->active ?? false,
-                'id'     => $slot?->id,
             ];
         });
-        return view('admin.ad-slots.index', compact('adSlots'));
+
+        $directLinkSlots = collect($this->directLinks)->map(function ($label, $key) {
+            $slot = AdSlot::where('slot_key', $key)->first();
+            return [
+                'key'    => $key,
+                'label'  => $label,
+                'code'   => $slot?->code,   // stores the URL here
+                'active' => $slot?->active ?? false,
+            ];
+        });
+
+        return view('admin.ad-slots.index', compact('adSlots', 'directLinkSlots'));
     }
 
     public function update(Request $request, string $key)
     {
+        $allLabels = array_merge($this->slots, $this->directLinks);
         AdSlot::updateOrCreate(
             ['slot_key' => $key],
             [
-                'label'  => $this->slots[$key] ?? $key,
+                'label'  => $allLabels[$key] ?? $key,
                 'code'   => $request->code,
                 'active' => $request->boolean('active'),
             ]
         );
-        return back()->with('success', 'تم حفظ الإعلان');
+        return back()->with('success', 'تم حفظ الإعدادات');
     }
 }
