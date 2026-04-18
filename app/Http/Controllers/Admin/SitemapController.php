@@ -15,13 +15,52 @@ class SitemapController extends Controller
         $settings = [
             'sitemap_auto_generate' => Setting::get('sitemap_auto_generate', true),
         ];
-        return view('admin.sitemap.index', compact('settings'));
+
+        $stats = [
+            'posts_count'      => \App\Models\Post::published()->count(),
+            'categories_count' => \App\Models\Category::count(),
+            'last_post'        => \App\Models\Post::published()->latest('published_at')->value('published_at'),
+            'static_pages'     => 6, // home, search, about, contact, privacy, terms
+        ];
+
+        $sitemaps = [
+            [
+                'label'       => 'Sitemap Index',
+                'url'         => url('sitemap.xml'),
+                'description' => 'الملف الرئيسي الذي يجمع كل الـ Sitemaps',
+                'icon'        => 'fa-sitemap',
+                'color'       => '#2271b1',
+            ],
+            [
+                'label'       => 'Posts Sitemap',
+                'url'         => url('sitemap-posts.xml'),
+                'description' => $stats['posts_count'] . ' مقال منشور',
+                'icon'        => 'fa-file-alt',
+                'color'       => '#00a32a',
+            ],
+            [
+                'label'       => 'Categories Sitemap',
+                'url'         => url('sitemap-categories.xml'),
+                'description' => $stats['categories_count'] . ' تصنيف',
+                'icon'        => 'fa-folder-open',
+                'color'       => '#dba617',
+            ],
+            [
+                'label'       => 'Pages Sitemap',
+                'url'         => url('sitemap-pages.xml'),
+                'description' => $stats['static_pages'] . ' صفحات ثابتة',
+                'icon'        => 'fa-copy',
+                'color'       => '#d63638',
+            ],
+        ];
+
+        return view('admin.sitemap.index', compact('settings', 'stats', 'sitemaps'));
     }
 
     public function generate()
     {
-        GenerateSitemapJob::dispatch();
-        return back()->with('success', 'جاري إنشاء خريطة الموقع في الخلفية، انتظر لحظة ثم أعد التحميل.');
+        \Illuminate\Support\Facades\Cache::forget('sitemap_index');
+        return back()->with('success', 'تم تحديث الـ Sitemap. الرابط جاهز للزيارة.');
     }
 
     public function ping()
