@@ -601,7 +601,7 @@
     </article>
 
     {{-- ═══ Sidebar ═══ --}}
-    <div class="hidden lg:block w-96 flex-shrink-0">
+    <div class="hidden lg:block w-96 flex-shrink-0 sticky top-4 self-start">
         <x-front.sidebar :trending="$sidebarTrending" :tags="$sidebarTags" />
     </div>
 
