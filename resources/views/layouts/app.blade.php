@@ -83,6 +83,12 @@
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         /* Reserve space for Font Awesome icons BEFORE FA CSS loads — prevents CLS */
         .fas,.far,.fab,.fal,.fad,.fa { display:inline-block; font-style:normal; line-height:1; min-width:.875em; }
+        /* Restore list bullets/numbers inside TinyMCE content (Tailwind resets them) */
+        .prose ul { list-style-type: disc !important; padding-right: 1.5rem !important; padding-left: 0 !important; }
+        .prose ol { list-style-type: decimal !important; padding-right: 1.5rem !important; padding-left: 0 !important; }
+        .prose ul li, .prose ol li { display: list-item !important; margin-bottom: 0.25rem; }
+        .prose ul ul { list-style-type: circle !important; }
+        .prose ul ul ul { list-style-type: square !important; }
         /* Search slide */
         [x-cloak] { display: none !important; }
     </style>
