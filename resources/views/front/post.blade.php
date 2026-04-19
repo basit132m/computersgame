@@ -81,7 +81,7 @@
     if ($post->featured_image && $content) {
         $pos = mb_strpos($content, '</p>');
         if ($pos !== false) {
-            $imgTag = '<figure style="margin:1.25rem 0;text-align:center"><img src="' . asset('storage/' . $post->featured_image) . '" alt="' . e($post->title) . '" style="max-width:100%;border-radius:8px;" loading="lazy"></figure>';
+            $imgTag = '<figure style="margin:1.25rem 0;text-align:center"><img src="' . asset('storage/' . $post->featured_image) . '" alt="' . e($post->title) . '" style="max-width:100%;border-radius:8px;height:auto;" width="800" height="450" loading="lazy"></figure>';
             $content = mb_substr($content, 0, $pos + 4) . $imgTag . mb_substr($content, $pos + 4);
         }
     }
@@ -123,10 +123,13 @@
             </div>
         </div>
 
-        {{-- Banner image --}}
+        {{-- Banner image — LCP element: fetchpriority=high for fastest load --}}
         @if($post->banner_image)
-        <div class="mb-4 rounded-xl overflow-hidden border border-gray-200">
-            <img src="{{ asset('storage/'.$post->banner_image) }}" alt="{{ $post->title }}" class="w-full object-cover" loading="eager">
+        <div class="mb-4 rounded-xl overflow-hidden border border-gray-200" style="aspect-ratio:16/9;">
+            <img src="{{ asset('storage/'.$post->banner_image) }}" alt="{{ $post->title }}"
+                 class="w-full h-full object-cover"
+                 width="800" height="450"
+                 fetchpriority="high" loading="eager">
         </div>
         @endif
 

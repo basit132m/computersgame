@@ -49,12 +49,12 @@
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
 
-    {{-- Google Fonts: preconnect + preload to avoid render-blocking --}}
+    {{-- Google Fonts: display=optional prevents FOUT text reflow (eliminates CLS from font swap) --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap"
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=optional"
           onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap"></noscript>
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=optional"></noscript>
 
     {{-- Font Awesome 6: load async so it never blocks first paint --}}
     <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
@@ -81,6 +81,8 @@
         /* Hide scrollbar but keep scrollable */
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        /* Reserve space for Font Awesome icons BEFORE FA CSS loads — prevents CLS */
+        .fas,.far,.fab,.fal,.fad,.fa { display:inline-block; font-style:normal; line-height:1; min-width:.875em; }
         /* Search slide */
         [x-cloak] { display: none !important; }
     </style>
