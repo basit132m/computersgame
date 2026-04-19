@@ -56,10 +56,7 @@
           onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap"></noscript>
 
-    {{-- Font Awesome 6: load async so it never blocks first paint --}}
-    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-          crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous"></noscript>
+    {{-- Font Awesome: self-hosted subset via Vite (see resources/css/fa-icons.css) --}}
 
     {{-- Vite Assets --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -81,8 +78,6 @@
         /* Hide scrollbar but keep scrollable */
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-        /* Reserve space for Font Awesome icons BEFORE FA CSS loads — prevents CLS */
-        .fas,.far,.fab,.fal,.fad,.fa { display:inline-block; font-style:normal; line-height:1; min-width:.875em; }
         /* Global H2 style — green underline like TinyMCE editor headings */
         h2 { border-bottom: 2px solid #30A38A; padding-bottom: 0.4rem; margin-bottom: 0.75rem; }
         /* Restore list bullets/numbers inside TinyMCE content (Tailwind resets them) */
