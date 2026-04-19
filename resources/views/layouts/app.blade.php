@@ -38,13 +38,16 @@
     <meta name="twitter:description" content="@yield('og_description', $globalSettings['site_description'] ?? '')">
 
     <link rel="icon" type="image/x-icon" href="{{ ($globalSettings['favicon'] ?? '') ? asset('storage/'.$globalSettings['favicon']) : asset('favicon.ico') }}">
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+    <meta name="format-detection" content="telephone=no">
 
-    @yield('pagination_links')
+    @stack('pagination_links')
 
     {{-- DNS prefetch for external resources --}}
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
 
     {{-- Google Fonts: preconnect + preload to avoid render-blocking --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -135,7 +138,8 @@
                 @if(!empty($globalSettings['logo']))
                     <img src="{{ asset('storage/'.$globalSettings['logo']) }}"
                          alt="{{ $globalSettings['site_name'] ?? 'ألعاب الكمبيوتر' }}"
-                         class="h-10 w-auto mx-auto">
+                         class="h-10 w-auto mx-auto"
+                         fetchpriority="high" loading="eager">
                 @else
                     <span class="text-2xl font-black text-[#30A38A] leading-tight">{{ $globalSettings['site_name'] ?? 'ألعاب الكمبيوتر' }}</span>
                 @endif

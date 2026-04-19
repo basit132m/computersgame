@@ -10,6 +10,17 @@ export default defineConfig({
         }),
         tailwindcss(),
     ],
+    build: {
+        target: ['es2020', 'edge88', 'firefox78', 'chrome87', 'safari14'],
+        cssMinify: true,
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    alpine: ['alpinejs'],
+                },
+            },
+        },
+    },
     server: {
         watch: {
             ignored: ['**/storage/framework/views/**'],

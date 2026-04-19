@@ -7,15 +7,30 @@
 @section('robots', 'noindex, follow')
 @endif
 
+@push('pagination_links')
+@if($posts->currentPage() > 1)
+<link rel="prev" href="{{ $posts->previousPageUrl() }}">
+@endif
+@if($posts->hasMorePages())
+<link rel="next" href="{{ $posts->nextPageUrl() }}">
+@endif
+@endpush
+
 @section('schema')
 <script type="application/ld+json">
 {
     "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-        {"@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "{{ url('/') }}"},
-        {"@type": "ListItem", "position": 2, "name": "{{ $category->name }}", "item": "{{ route('category.show', $category->slug) }}"}
-    ]
+    "@type": "CollectionPage",
+    "name": "{{ $category->name }}",
+    "description": "{{ $category->meta_description ?: $category->description ?: 'تحميل '.$category->name.' مجاناً' }}",
+    "url": "{{ route('category.show', $category->slug) }}",
+    "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "الرئيسية", "item": "{{ url('/') }}"},
+            {"@type": "ListItem", "position": 2, "name": "{{ $category->name }}", "item": "{{ route('category.show', $category->slug) }}"}
+        ]
+    }
 }
 </script>
 @endsection
