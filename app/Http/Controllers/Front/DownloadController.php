@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Controller;
 use App\Models\DownloadClick;
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class DownloadController extends Controller
 {
@@ -15,9 +17,17 @@ class DownloadController extends Controller
             abort(404);
         }
 
-        $post->load('downloadLinks');
+        $post->load('downloadLinks', 'category');
 
-        return view('front.download', compact('post'));
+        $sidebarTrending = Cache::remember('sidebar_trending', 3600, function () {
+            return Post::published()->orderByDesc('downloads')->limit(10)->get();
+        });
+
+        $sidebarTags = Cache::remember('sidebar_tags', 21600, function () {
+            return Tag::withCount('posts')->orderByDesc('posts_count')->limit(20)->get();
+        });
+
+        return view('front.download', compact('post', 'sidebarTrending', 'sidebarTags'));
     }
 
     public function trackClick(Request $request)
