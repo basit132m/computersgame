@@ -594,7 +594,7 @@
     </article>
 
     {{-- ═══ Sidebar ═══ --}}
-    <div class="hidden lg:block w-96 flex-shrink-0" style="position:sticky;top:1rem;align-self:flex-start;">
+    <div class="hidden lg:block w-96 flex-shrink-0" style="position:sticky;bottom:1rem;">
         <x-front.sidebar :trending="$sidebarTrending" :tags="$sidebarTags" />
     </div>
 
