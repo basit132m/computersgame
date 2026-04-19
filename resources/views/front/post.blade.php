@@ -427,13 +427,13 @@
                 <p class="text-center text-xs text-gray-500 mb-3">من قسم : {{ $post->category->name }}</p>
                 @endif
                 {{-- Link buttons --}}
-                <div class="flex flex-col gap-3">
+                <div class="flex flex-col gap-3 items-center">
                     @foreach($post->downloadLinks as $link)
                     {{-- Main download button --}}
                     <a href="{{ route('download.show', $post->slug) }}" target="_blank"
                        onclick="trackDownload({{ $post->id }})"
-                       class="flex items-center rounded-lg overflow-hidden w-full hover:opacity-90 transition"
-                       style="background:#2563eb;">
+                       class="flex items-center rounded-lg overflow-hidden hover:opacity-90 transition"
+                       style="background:#2563eb;width:100%;max-width:420px;">
                         <span class="flex-1 flex items-center justify-center gap-2 py-4 px-4 text-white font-bold text-base">
                             <i class="fab fa-windows text-xl"></i>
                             {{ $link->label }}
@@ -448,8 +448,8 @@
                     @if($articleDirectUrl)
                     <button type="button"
                         onclick="handleArticleAdClick(this, {{ $post->id }}, '{{ addslashes(route('download.show', $post->slug)) }}', '{{ addslashes($articleDirectUrl) }}')"
-                        class="flex items-center justify-center gap-2 w-full rounded-lg py-3 px-4 font-bold text-sm transition hover:opacity-90"
-                        style="background:#f59e0b; color:#fff;">
+                        class="flex items-center justify-center gap-2 rounded-lg py-3 px-4 font-bold text-sm transition hover:opacity-90"
+                        style="background:#f59e0b;color:#fff;width:100%;max-width:420px;">
                         <i class="fas fa-download"></i>
                         تحميل مباشر
                     </button>
