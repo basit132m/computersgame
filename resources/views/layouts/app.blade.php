@@ -83,6 +83,8 @@
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         /* Reserve space for Font Awesome icons BEFORE FA CSS loads — prevents CLS */
         .fas,.far,.fab,.fal,.fad,.fa { display:inline-block; font-style:normal; line-height:1; min-width:.875em; }
+        /* Global H2 style — green underline like TinyMCE editor headings */
+        h2 { border-bottom: 2px solid #30A38A; padding-bottom: 0.4rem; margin-bottom: 0.75rem; }
         /* Restore list bullets/numbers inside TinyMCE content (Tailwind resets them) */
         .prose ul { list-style-type: disc !important; padding-right: 1.5rem !important; padding-left: 0 !important; }
         .prose ol { list-style-type: decimal !important; padding-right: 1.5rem !important; padding-left: 0 !important; }
