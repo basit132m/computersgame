@@ -98,7 +98,7 @@
     </div>
 
     {{-- Sidebar --}}
-    <div class="hidden lg:block w-72 flex-shrink-0 sticky top-4 self-start">
+    <div class="hidden lg:block w-72 flex-shrink-0" style="position:sticky;top:1rem;align-self:flex-start;">
         <x-front.sidebar :trending="$sidebarTrending" :tags="$sidebarTags" />
     </div>
 
