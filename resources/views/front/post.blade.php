@@ -75,16 +75,7 @@
 
 @php
     $kw = $post->focus_keyword ?: $post->title;
-
-    // Auto-insert featured image after first paragraph
     $content = $post->content ?? '';
-    if ($post->featured_image && $content) {
-        $pos = mb_strpos($content, '</p>');
-        if ($pos !== false) {
-            $imgTag = '<figure style="margin:1.25rem 0;text-align:center"><img src="' . asset('storage/' . $post->featured_image) . '" alt="' . e($post->title) . '" style="max-width:100%;border-radius:8px;height:auto;" width="800" height="450" loading="lazy"></figure>';
-            $content = mb_substr($content, 0, $pos + 4) . $imgTag . mb_substr($content, $pos + 4);
-        }
-    }
 @endphp
 
 @section('content')
