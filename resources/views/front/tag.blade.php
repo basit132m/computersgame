@@ -17,7 +17,7 @@
         <p class="text-gray-500">لا توجد مقالات بهذا الوسم</p>
         @endif
     </div>
-    <div class="hidden lg:block w-80 flex-shrink-0" style="position:sticky;bottom:1rem;">
+    <div class="hidden lg:block w-80 flex-shrink-0" style="position:sticky;bottom:1rem;align-self:flex-start;">
         <x-front.sidebar :trending="$sidebarTrending" :tags="[]" />
     </div>
 </div>
