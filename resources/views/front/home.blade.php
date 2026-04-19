@@ -47,8 +47,8 @@
     ═══════════════════════ --}}
     <div class="flex-1 min-w-0">
 
-        {{-- H1: SEO page heading (visually minimal) --}}
-        <h1 class="text-lg font-black text-gray-800 mb-4 pb-3 border-b border-gray-200">
+        {{-- H1: SEO only, hidden visually --}}
+        <h1 class="sr-only">
             تحميل العاب كمبيوتر وبرامج وتطبيقات اندرويد مجاناً
         </h1>
 
@@ -127,7 +127,9 @@
          Sidebar (LEFT in RTL)
     ═══════════════════════ --}}
     <div class="hidden lg:block w-96 flex-shrink-0">
-        <x-front.sidebar :trending="$sidebarTrending" :tags="$sidebarTags" />
+        <div class="sticky top-4">
+            <x-front.sidebar :trending="$sidebarTrending" :tags="$sidebarTags" />
+        </div>
     </div>
 
 </div>
