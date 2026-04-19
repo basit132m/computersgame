@@ -416,11 +416,10 @@
             @endphp
             <div class="p-5 border-b border-gray-100">
                 {{-- Title bar --}}
-                <div class="flex items-center justify-end gap-3 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mb-3">
+                <div class="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mb-3 text-center">
                     <span class="font-bold text-gray-800 text-sm leading-snug">
-                        تحميل لعبة {{ $post->title }} للكمبيوتر {{ $post->downloadLinks->count() > 1 ? 'بروابط مباشرة' : 'برابط واحد مباشر' }}
+                        {{ $post->title }} برابط واحد مباشر
                     </span>
-                    <i class="fas fa-cloud-download-alt text-gray-500 text-xl flex-shrink-0"></i>
                 </div>
                 {{-- Category line --}}
                 @if($post->category)
