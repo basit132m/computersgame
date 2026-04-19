@@ -462,14 +462,14 @@
             <div class="p-5 border-b border-gray-100"
                  x-data="ratingWidget({{ $post->id }}, {{ $post->average_rating }}, {{ $post->ratings_count }}, {{ $userRating ?? 'null' }})">
                 <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line"><i class="fas fa-star text-yellow-400 ml-2"></i>تقييم {{ $kw }}</h2>
-                <div class="flex items-center gap-6">
-                    <div class="text-center border-l pl-6">
+                <div class="flex flex-col items-center gap-4">
+                    <div class="text-center">
                         <p class="text-4xl font-bold text-gray-800" x-text="avgRating.toFixed(1)"></p>
                         <p class="text-xs text-gray-500 mt-1"><span x-text="ratingCount"></span> تقييم</p>
                     </div>
-                    <div>
+                    <div class="text-center">
                         <p class="text-sm text-gray-600 mb-2">أضف تقييمك:</p>
-                        <div class="flex gap-1">
+                        <div class="flex gap-1 justify-center">
                             <template x-for="star in 5" :key="star">
                                 <button @click="rate(star)" class="text-2xl transition"
                                         :class="star <= (hover || userRating || avgRating) ? 'text-yellow-400' : 'text-gray-300'"
@@ -484,7 +484,7 @@
             {{-- ⑪ مشاركة المقال --}}
             <div class="p-5">
                 <h2 class="text-center font-bold text-gray-800 text-base mb-4 h2-line">مشاركة المقال</h2>
-                <div class="flex flex-wrap gap-2">
+                <div class="flex flex-wrap gap-2 justify-center">
                     <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url($post->slug)) }}"
                        target="_blank" rel="noopener nofollow"
                        class="flex items-center gap-2 bg-blue-600 text-white text-xs px-4 py-2 rounded hover:bg-blue-700 transition">
